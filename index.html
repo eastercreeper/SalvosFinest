@@ -1,11 +1,155 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Salvo's Finest</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apex Custom Lobbies</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Salvo's Finest</h1>
-    <p>Coming soon...</p>
+<header>
+  <div class="container nav">
+    <a href="index.html" class="logo">Salvo's Finest <span>CUSTOM LOBBIES</span></a>
+    <nav>
+      <a href="index.html">Home</a><a href="#modes">Game Modes</a><a href="#how">How It Works</a>
+      <a href="#signup">Sign Up</a><a href="#rules">Rules</a><a href="#lobby">Lobby</a>
+    </nav>
+    <a href="#signup" class="nav-cta">Sign Up</a>
+  </div>
+</header>
+
+<main>
+<section class="hero" id="home">
+  <div class="hero-art"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="kicker">Community Custom Games</div>
+      <h1>Salvo's Finest<em>CUSTOM LOBBIES</em></h1>
+      <p>Random teams. Random game modes. Endless fun. Jump in, test your skills, and play unique challenges with the community.</p>
+      <div class="actions"><a class="btn" href="#signup">Sign Up Now</a><a class="btn secondary" href="#modes">View Game Modes</a></div>
+    </div>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="stat"><b>RANDOM</b><span>Teams</span></div>
+  <div class="stat"><b>RANDOM</b><span>Game Modes</span></div>
+  <div class="stat"><b>12+</b><span>Custom Modes</span></div>
+  <div class="stat"><b>0</b><span>Cheaters Allowed</span></div>
+</div>
+
+<section id="modes">
+<div class="container">
+  <div class="section-title"><div><div class="kicker">Choose your challenge</div><h2>Game Modes</h2></div><p>Game modes are randomly selected by the host using the wheel spin. Each mode has its own rules.</p></div>
+  <div class="grid" id="modeGrid"></div>
+  <div class="fallback"><strong>If we can't get the lobby completely full, we switch to:</strong><div class="fallback-list"><span>Duos</span><span>Solos</span><span>Team Deathmatch</span><span>Gun Run</span><span>Control</span></div></div>
+</div>
+</section>
+
+<section id="how">
+<div class="container">
+  <div class="section-title"><div><div class="kicker">Simple. Fair. Random.</div><h2>How It Works</h2></div></div>
+  <div class="steps">
+    <div class="step"><div class="num">1</div><h3>Sign Up</h3><p>Register individually with your Discord and Apex username.</p></div>
+    <div class="step"><div class="num">2</div><h3>Teams Are Randomized</h3><p>The host matches registered players into squads.</p></div>
+    <div class="step"><div class="num">3</div><h3>Mode Is Selected</h3><p>The host spins the wheel to decide what you play.</p></div>
+    <div class="step"><div class="num">4</div><h3>Play</h3><p>Jump into the lobby and compete under the mode rules.</p></div>
+    <div class="step"><div class="num">5</div><h3>Have Fun</h3><p>Respect everyone and enjoy the match.</p></div>
+  </div>
+</div>
+</section>
+
+<section id="signup">
+<div class="container form-wrap">
+  <div class="section-title"><div><div class="kicker">Reserve your spot</div><h2>Sign Up</h2></div></div>
+  <div class="form-panel">
+    <form id="signupForm">
+      <div class="form-grid">
+        <div class="field"><label>Discord Username</label><input id="soloDiscord" placeholder="e.g. player#1234" required></div>
+        <div class="field"><label>Apex Legends Username</label><input id="soloApex" placeholder="e.g. ApexPlayer" required></div>
+      </div>
+      <div class="notice"><strong>Everyone signs up individually.</strong> Teams are randomized by the host after registration, so there is no team signup option. By signing up, you agree to follow the community rules: no trash talk, discrimination, cheating, or unsportsmanlike behavior.</div>
+      <div class="submit-row"><button class="btn" type="submit">Submit Registration</button></div>
+    </form>
+  </div>
+</div>
+</section>
+
+<section id="rules">
+<div class="container">
+  <div class="section-title"><div><div class="kicker">Keep it positive</div><h2>Community Rules</h2></div></div>
+  <div class="rules">
+    <div class="rule"><div class="rule-icon">01</div><div><b>No Trash Talk</b><span>No negative comments or toxic behavior.</span></div></div>
+    <div class="rule"><div class="rule-icon">02</div><div><b>No Showing Off</b><span>Let everyone enjoy the moment.</span></div></div>
+    <div class="rule"><div class="rule-icon">03</div><div><b>Be Respectful</b><span>Treat everyone like a teammate.</span></div></div>
+    <div class="rule"><div class="rule-icon">04</div><div><b>No Discrimination or Hate Speech</b><span>No hate of any kind.</span></div></div>
+    <div class="rule"><div class="rule-icon">05</div><div><b>No Cheaters</b><span>Play fair and keep it legit.</span></div></div>
+    <div class="rule"><div class="rule-icon">06</div><div><b>Have Fun — It's Just a Game!</b><span>Good vibes. Great community.</span></div></div>
+  </div>
+</div>
+</section>
+
+<<section id="lobby">
+  <div class="lobby">
+
+    <div class="panel">
+      <h3>Registered Players</h3>
+
+      <p>
+        Players sign up individually and are randomized
+        into teams by the host.
+      </p>
+
+      <a href="players.html" class="btn secondary">
+        View Players & Teams
+      </a>
+    </div>
+
+    <div>
+      <div class="result" id="result">
+
+        <small>Current Game Mode</small>
+
+        <h2>Not Selected</h2>
+
+        <p>
+          The host has not selected a game mode yet.
+        </p>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+</main>
+
+<footer><div class="container footer-inner"><span>APEX CUSTOM LOBBIES</span><span>Community custom games • Play fair • Have fun</span></div></footer>
+<div class="toast" id="toast"></div>
+<!-- Rules Modal -->
+<div class="rules-modal" id="rulesModal">
+  <div class="rules-modal-overlay" onclick="closeRules()"></div>
+
+  <div class="rules-modal-box">
+    <button class="rules-modal-close" onclick="closeRules()">×</button>
+
+    <div class="kicker">Game Mode Rules</div>
+    <h2 id="modalTitle">Mode Name</h2>
+
+    <div class="modal-divider"></div>
+
+    <p class="modal-description" id="modalDescription"></p>
+
+    <div class="modal-rules">
+      <h3>Rules</h3>
+      <p id="modalRules"></p>
+    </div>
+
+    <button class="btn modal-close-btn" onclick="closeRules()">
+      Close
+    </button>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
 </body>
 </html>

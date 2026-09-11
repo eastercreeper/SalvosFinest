@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard | Salvo's Finest</title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<header>
+    <div class="container nav">
+
+        <a href="index.html" class="logo">
+            Salvo's Finest <span>CUSTOM LOBBIES</span>
+        </a>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="index.html#modes">Game Modes</a>
+            <a href="players.html">Players</a>
+        </nav>
+
+        <button id="logoutButton" class="nav-cta">
+            Logout
+        </button>
+
+    </div>
+</header>
+
+
+<main>
+
+    <section id="loginSection">
+
+        <div class="container">
+
+            <div class="section-title">
+                <div>
+                    <div class="kicker">
+                        Authorized Access
+                    </div>
+
+                    <h2>
+                        Host Login
+                    </h2>
+                </div>
+
+                <p>
+                    Sign in to control the custom lobby.
+                </p>
+            </div>
+
+
+            <div class="form-panel">
+
+                <form id="loginForm">
+
+                    <div class="field">
+                        <label for="username">
+                            Username
+                        </label>
+
+                        <input
+                                type="text"
+                                id="username"
+                                placeholder="Enter username"
+                                autocomplete="username"
+                                required
+                        >
+                    </div>
+
+
+                    <div class="field">
+                        <label for="password">
+                            Password
+                        </label>
+
+                        <input
+                                type="password"
+                                id="password"
+                                placeholder="Enter password"
+                                autocomplete="current-password"
+                                required
+                        >
+                    </div>
+
+
+                    <div class="submit-row">
+
+                        <button
+                                class="btn"
+                                type="submit"
+                                id="loginButton"
+                        >
+                            Login
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ADMIN DASHBOARD -->
+
+    <section id="adminSection" style="display: none;">
+
+        <div class="container">
+
+            <div class="section-title">
+
+                <div>
+                    <div class="kicker">Host Dashboard</div>
+                    <h2>Lobby Controls</h2>
+                </div>
+
+                <p>
+                    Only authorized administrators can control the lobby.
+                </p>
+
+            </div>
+
+
+            <!-- CURRENT GAME MODE -->
+
+            <div class="result" id="adminResult">
+
+                <small>
+                    Current Game Mode
+                </small>
+
+                <h2 id="currentMode">
+                    Not Selected
+                </h2>
+
+                <p id="currentModeDetails">
+                    The host has not selected a game mode yet.
+                </p>
+
+            </div>
+
+
+            <!-- CONTROLS -->
+
+            <div class="panel">
+
+                <h3>Host Controls</h3>
+
+                <div class="host-actions">
+
+                    <button
+                            class="btn"
+                            id="spinTeamsButton"
+                    >
+                        ↻ Spin Teams
+                    </button>
+
+
+                    <button
+                            class="btn"
+                            id="spinModeButton"
+                    >
+                        ↻ Spin Game Mode
+                    </button>
+
+                    <button id="clearLobbyButton" class="btn">
+
+                        Clear Lobby
+
+                    </button>
+
+                    <button
+                            id="clearPlayersButton"
+                            class="btn"
+                    >
+                        Clear Registered Players
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- TEAM RESULTS -->
+
+            <div class="panel" style="margin-top: 20px;">
+
+                <h3>Current Teams</h3>
+
+                <div id="teamResults">
+
+                    <div class="player-row">
+                        <span>
+                            Teams have not been randomized yet.
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <div class="container footer-inner">
+
+        <span>
+            APEX CUSTOM LOBBIES
+        </span>
+
+        <span>
+            Admin Dashboard
+        </span>
+
+    </div>
+
+</footer>
+
+
+<div class="toast" id="toast"></div>
+
+
+<!-- SUPABASE -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="admin.js"></script>
+
+</body>
+</html>

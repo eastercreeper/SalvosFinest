@@ -1,0 +1,1216 @@
+ /* =========================================================
+       APEX CUSTOM LOBBIES
+       Main Stylesheet
+    ========================================================= */
+
+
+    /* =========================================================
+       1. VARIABLES
+    ========================================================= */
+
+:root {
+    --bg: #05080d;
+    --panel: #0a111a;
+    --line: #263342;
+
+    --red: #ff2635;
+    --red2: #ff4b55;
+
+    --white: #f5f7fa;
+    --muted: #9aa7b5;
+
+    --orange: #ff9d27;
+}
+
+
+/* =========================================================
+   2. GLOBAL / RESET
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--white);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* Background decorative lines */
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.13;
+
+    background:
+            linear-gradient(
+                    135deg,
+                    transparent 0 48%,
+                    #8d1720 48.2% 49%,
+                    transparent 49.2%
+            ),
+            linear-gradient(
+                    315deg,
+                    transparent 0 73%,
+                    #8d1720 73.2% 74%,
+                    transparent 74.2%
+            );
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+.container {
+    width: min(1180px, 92%);
+    margin: auto;
+}
+
+
+/* =========================================================
+   3. HEADER / NAVIGATION
+========================================================= */
+
+header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+
+    background: rgba(4, 7, 11, 0.92);
+    backdrop-filter: blur(12px);
+
+    border-bottom: 1px solid #1b2530;
+}
+
+.nav {
+    height: 72px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 25px;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 0.8;
+    letter-spacing: -1px;
+}
+
+.logo span {
+    margin-left: 6px;
+
+    color: var(--red);
+    font-size: 15px;
+    font-style: italic;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+nav a {
+    color: #c3ccd5;
+
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+nav a:hover,
+nav a.active {
+    color: #fff;
+}
+
+
+/* =========================================================
+   4. BUTTONS
+========================================================= */
+
+.nav-cta,
+.btn {
+    border: 0;
+
+    background: var(--red);
+    color: #fff;
+
+    padding: 13px 20px;
+
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    cursor: pointer;
+
+    clip-path: polygon(
+            5% 0,
+            100% 0,
+            95% 100%,
+            0 100%
+    );
+}
+
+.btn:hover,
+.nav-cta:hover {
+    background: var(--red2);
+}
+
+.btn.secondary {
+    background: transparent;
+    border: 1px solid #8996a5;
+    clip-path: none;
+}
+
+
+/* =========================================================
+   5. HERO SECTION
+========================================================= */
+
+.hero {
+    position: relative;
+
+    min-height: 650px;
+
+    display: flex;
+    align-items: center;
+
+    overflow: hidden;
+}
+
+.hero::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background:
+            radial-gradient(
+                    circle at 72% 45%,
+                    rgba(255, 38, 53, 0.2),
+                    transparent 32%
+            ),
+            linear-gradient(
+                    90deg,
+                    #05080d 0%,
+                    rgba(5, 8, 13, 0.83) 48%,
+                    rgba(5, 8, 13, 0.2) 100%
+            );
+}
+
+.hero-art {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    width: 63%;
+    height: 100%;
+
+    background:
+            radial-gradient(
+                    circle at 55% 40%,
+                    #394552 0 3%,
+                    transparent 4%
+            ),
+            linear-gradient(
+                    145deg,
+                    transparent 35%,
+                    rgba(255, 38, 53, 0.24) 36% 39%,
+                    transparent 40%
+            ),
+            linear-gradient(
+                    120deg,
+                    #111b27,
+                    #273443 48%,
+                    #101720
+            );
+
+    clip-path: polygon(
+            18% 0,
+            100% 0,
+            100% 100%,
+            0 100%
+    );
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+
+    width: 650px;
+    padding: 90px 0;
+}
+
+.kicker {
+    color: var(--red);
+
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+h1 {
+    margin: 16px 0;
+
+    font-size: clamp(55px, 8vw, 105px);
+    line-height: 0.78;
+
+    font-weight: 1000;
+    letter-spacing: -5px;
+}
+
+h1 em {
+    display: block;
+
+    margin-top: 24px;
+
+    color: var(--red);
+
+    font-size: 0.48em;
+    font-style: italic;
+    letter-spacing: -1px;
+}
+
+.hero p {
+    max-width: 620px;
+
+    color: #d0d7df;
+
+    line-height: 1.7;
+}
+
+.actions {
+    display: flex;
+    gap: 14px;
+
+    margin-top: 28px;
+}
+
+
+/* =========================================================
+   6. STATS BAR
+========================================================= */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+}
+
+.stat {
+    padding: 28px 20px;
+
+    text-align: center;
+
+    border-right: 1px solid var(--line);
+}
+
+.stat:last-child {
+    border-right: 0;
+}
+
+.stat b {
+    display: block;
+
+    color: var(--red);
+
+    font-size: 25px;
+}
+
+.stat span {
+    color: var(--muted);
+
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   7. GENERAL SECTIONS
+========================================================= */
+
+section {
+    padding: 85px 0;
+}
+
+.section-title {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+
+    margin-bottom: 28px;
+}
+
+.section-title h2 {
+    margin: 0;
+
+    font-size: 42px;
+    text-transform: uppercase;
+    letter-spacing: -2px;
+}
+
+.section-title p {
+    max-width: 500px;
+
+    color: var(--muted);
+}
+
+
+/* =========================================================
+   8. GAME MODES
+========================================================= */
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 14px;
+}
+
+.card {
+    position: relative;
+
+    overflow: hidden;
+
+    background: linear-gradient(
+            145deg,
+            #101a25,
+            #081019
+    );
+
+    border: 1px solid var(--line);
+}
+
+.card-img {
+    position: relative;
+
+    height: 125px;
+
+    background:
+            linear-gradient(
+                    135deg,
+                    rgba(255, 38, 53, 0.25),
+                    transparent 45%
+            ),
+            linear-gradient(
+                    45deg,
+                    #172331,
+                    #344351 50%,
+                    #111821
+            );
+}
+
+.card-img::after {
+    content: "";
+
+    position: absolute;
+    top: 25px;
+    right: -20px;
+
+    width: 110px;
+    height: 70px;
+
+    border: 2px solid rgba(255, 255, 255, 0.13);
+
+    transform: skew(-20deg) rotate(-10deg);
+}
+
+.card-body {
+    padding: 16px;
+}
+
+.card h3 {
+    margin: 0 0 7px;
+
+    font-size: 17px;
+    text-transform: uppercase;
+}
+
+.card p {
+    margin: 0 0 12px;
+
+    color: var(--muted);
+
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.rule-link {
+    color: var(--red);
+
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+
+    cursor: pointer;
+}
+
+.rule-link:hover {
+    color: var(--red2);
+}
+
+
+/* =========================================================
+   9. FALLBACK MODES
+========================================================= */
+
+.fallback {
+    margin-top: 20px;
+    padding: 22px;
+
+    background: #080e15;
+
+    border: 1px solid var(--line);
+
+    text-align: center;
+}
+
+.fallback strong {
+    display: block;
+
+    margin-bottom: 15px;
+}
+
+.fallback-list {
+    display: flex;
+    justify-content: center;
+
+    gap: 35px;
+
+    color: #c8d0d8;
+
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   10. HOW IT WORKS
+========================================================= */
+
+.steps {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+
+    gap: 12px;
+}
+
+.step {
+    min-height: 150px;
+
+    padding: 22px;
+
+    background: var(--panel);
+
+    border: 1px solid var(--line);
+}
+
+.num {
+    width: 30px;
+    height: 30px;
+
+    display: grid;
+    place-items: center;
+
+    color: var(--red);
+
+    border: 1px solid var(--red);
+    border-radius: 50%;
+
+    font-weight: 900;
+}
+
+.step h3 {
+    margin: 18px 0 8px;
+
+    font-size: 13px;
+    text-transform: uppercase;
+}
+
+.step p {
+    margin: 0;
+
+    color: var(--muted);
+
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   11. COMMUNITY RULES
+========================================================= */
+
+.rules {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 20px;
+}
+
+.rule {
+    display: flex;
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 18px;
+
+    border-bottom: 1px solid var(--line);
+}
+
+.rule-icon {
+    width: 40px;
+    height: 40px;
+
+    flex-shrink: 0;
+
+    display: grid;
+    place-items: center;
+
+    color: var(--red);
+
+    border: 1px solid var(--red);
+    border-radius: 50%;
+
+    font-weight: 900;
+}
+
+.rule b {
+    display: block;
+
+    text-transform: uppercase;
+}
+
+.rule span {
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   12. SIGN-UP FORM
+========================================================= */
+
+.form-wrap {
+    max-width: 950px;
+
+    margin: auto;
+}
+
+.form-panel {
+    padding: 28px;
+
+    background: linear-gradient(
+            145deg,
+            #0d1722,
+            #070d14
+    );
+
+    border: 1px solid var(--line);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 18px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.field.full {
+    grid-column: 1 / -1;
+}
+
+.field label {
+    color: #c6cdd5;
+
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.field input {
+    padding: 14px;
+
+    background: #07101a;
+
+    border: 1px solid #263544;
+
+    color: #fff;
+
+    outline: none;
+}
+
+.field input:focus {
+    border-color: var(--red);
+}
+
+.submit-row {
+    display: flex;
+    justify-content: flex-end;
+
+    margin-top: 22px;
+}
+
+.notice {
+    margin-top: 15px;
+    padding: 12px 14px;
+
+    background: #17140d;
+
+    border-left: 3px solid var(--orange);
+
+    color: #d5d0c5;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   13. LOBBY
+========================================================= */
+
+.lobby {
+    display: grid;
+    grid-template-columns: 1.4fr 0.8fr;
+
+    gap: 20px;
+}
+
+.panel {
+    padding: 20px;
+
+    background: #09111a;
+
+    border: 1px solid var(--line);
+}
+
+.panel h3 {
+    margin: 0 0 15px;
+
+    text-transform: uppercase;
+}
+
+.player-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 13px 0;
+
+    border-bottom: 1px solid #1c2834;
+
+    font-size: 13px;
+}
+
+.badge {
+    padding: 5px 8px;
+
+    background: var(--red);
+
+    font-size: 9px;
+    font-weight: 900;
+}
+
+.badge.solo {
+    background: #147d60;
+}
+
+.host-actions {
+    display: grid;
+
+    gap: 10px;
+}
+
+.result {
+    margin-top: 18px;
+    padding: 22px;
+
+    background: linear-gradient(
+            135deg,
+            #321118,
+            #0b1118
+    );
+
+    border: 1px solid var(--red);
+}
+
+.result small {
+    color: #ff7a82;
+
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.result h2 {
+    margin: 8px 0;
+
+    font-size: 28px;
+}
+
+.result p {
+    color: #cbd2d9;
+
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   14. RULES MODAL
+========================================================= */
+
+.rules-modal {
+    position: fixed;
+    inset: 0;
+
+    z-index: 999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    visibility: hidden;
+    opacity: 0;
+
+    transition:
+            opacity 0.2s ease,
+            visibility 0.2s ease;
+}
+
+.rules-modal.show {
+    visibility: visible;
+    opacity: 1;
+}
+
+
+/* Dark background behind modal */
+
+.rules-modal-overlay {
+    position: absolute;
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.78);
+
+    backdrop-filter: blur(6px);
+}
+
+
+/* Modal window */
+
+.rules-modal-box {
+    position: relative;
+    z-index: 2;
+
+    width: min(600px, 100%);
+    max-height: 85vh;
+
+    overflow-y: auto;
+
+    padding: 35px;
+
+    background: linear-gradient(
+            145deg,
+            #111c28,
+            #070d14
+    );
+
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--red);
+
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.7);
+
+    transform: translateY(20px) scale(0.97);
+
+    transition: transform 0.2s ease;
+}
+
+.rules-modal.show .rules-modal-box {
+    transform: translateY(0) scale(1);
+}
+
+
+/* Modal title */
+
+.rules-modal-box h2 {
+    margin: 8px 0 0;
+
+    font-size: 38px;
+
+    text-transform: uppercase;
+    letter-spacing: -1px;
+}
+
+
+/* Close X */
+
+.rules-modal-close {
+    position: absolute;
+    top: 15px;
+    right: 18px;
+
+    width: 38px;
+    height: 38px;
+
+    border: 1px solid var(--line);
+
+    background: #0a1119;
+    color: #fff;
+
+    font-size: 28px;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+.rules-modal-close:hover {
+    background: var(--red);
+
+    border-color: var(--red);
+}
+
+
+/* Divider */
+
+.modal-divider {
+    height: 1px;
+
+    margin: 22px 0;
+
+    background: var(--line);
+}
+
+
+/* Mode description */
+
+.modal-description {
+    margin-bottom: 25px;
+
+    color: #d7dde4;
+
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+/* Rules box */
+
+.modal-rules {
+    padding: 20px;
+
+    background: #080f17;
+
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--red);
+}
+
+.modal-rules h3 {
+    margin: 0 0 10px;
+
+    color: var(--red);
+
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.modal-rules p {
+    margin: 0;
+
+    color: #c6ced7;
+
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+
+/* Modal close button */
+
+.modal-close-btn {
+    width: 100%;
+
+    margin-top: 25px;
+}
+
+
+/* =========================================================
+   15. FOOTER
+========================================================= */
+
+footer {
+    padding: 35px 0;
+
+    color: #778391;
+
+    border-top: 1px solid var(--line);
+
+    font-size: 12px;
+}
+
+.footer-inner {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+/* =========================================================
+   16. TOAST NOTIFICATION
+========================================================= */
+
+.toast {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+
+    z-index: 100;
+
+    display: none;
+
+    padding: 15px 18px;
+
+    background: #101a24;
+
+    border: 1px solid var(--red);
+}
+
+.toast.show {
+    display: block;
+}
+
+
+/* =========================================================
+   17. TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+    /* Navigation */
+
+    nav {
+        display: none;
+    }
+
+
+    /* Game modes */
+
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+
+    /* How it works */
+
+    .steps {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+
+    /* Community rules */
+
+    .rules {
+        grid-template-columns: 1fr;
+    }
+
+
+    /* Lobby */
+
+    .lobby {
+        grid-template-columns: 1fr;
+    }
+
+
+    /* Hero */
+
+    .hero-art {
+        width: 100%;
+        opacity: 0.35;
+    }
+
+    .hero-content {
+        width: 100%;
+    }
+}
+
+
+/* =========================================================
+   18. MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    /* Grids */
+
+    .grid,
+    .form-grid,
+    .stats,
+    .steps {
+        grid-template-columns: 1fr;
+    }
+
+
+    /* Stats */
+
+    .stats .stat {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+    }
+
+
+    /* Hero */
+
+    .hero {
+        min-height: 600px;
+    }
+
+
+    /* Hero buttons */
+
+    .actions {
+        flex-direction: column;
+    }
+
+
+    /* Section headings */
+
+    .section-title {
+        display: block;
+    }
+
+
+    /* Fallback modes */
+
+    .fallback-list {
+        flex-wrap: wrap;
+
+        gap: 15px;
+    }
+
+
+    /* Footer */
+
+    .footer-inner {
+        display: block;
+    }
+
+
+    /* Rules modal */
+
+    .rules-modal-box {
+        padding: 28px 22px;
+    }
+
+    .rules-modal-box h2 {
+        font-size: 30px;
+    }
+}
+
+
+ /* =========================================
+    LOBBY BOX ALIGNMENT
+    ========================================= */
+
+ #lobby .lobby {
+     display: grid !important;
+     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+     gap: 24px !important;
+     align-items: stretch !important;
+ }
+
+ /* Registered Players box */
+ #lobby .lobby > .panel {
+     width: 100% !important;
+     height: 260px !important;
+     min-height: 260px !important;
+     max-height: 260px !important;
+     margin: 0 !important;
+     box-sizing: border-box !important;
+ }
+
+ /* Game Mode wrapper */
+ #lobby .lobby > div:not(#publicTeams) {
+     width: 100% !important;
+     height: 260px !important;
+     min-height: 260px !important;
+     max-height: 260px !important;
+     margin: 0 !important;
+     box-sizing: border-box !important;
+ }
+
+ /* Game Mode box itself */
+ #lobby .lobby > div:not(#publicTeams) > .result {
+     width: 100% !important;
+     height: 260px !important;
+     min-height: 260px !important;
+     max-height: 260px !important;
+     margin: 0 !important;
+     box-sizing: border-box !important;
+ }
+
+ /* Keep the public teams underneath both boxes */
+ #publicTeams {
+     grid-column: 1 / -1 !important;
+     width: 100% !important;
+ }
+
+ /* Mobile */
+ @media (max-width: 800px) {
+     #lobby .lobby {
+         grid-template-columns: 1fr !important;
+     }
+
+     #publicTeams {
+         grid-column: auto !important;
+     }
+ }
+ /* =========================================
+   PUBLIC TEAMS PAGE
+   ========================================= */
+
+ .teams-container {
+     display: grid;
+     gap: 24px;
+ }
+
+ .team-block {
+     padding: 20px;
+     border: 1px solid rgba(255, 255, 255, 0.08);
+     border-radius: 8px;
+ }
+
+ .team-block h3 {
+     margin-top: 0;
+     margin-bottom: 16px;
+ }

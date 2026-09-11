@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Lobby Players | Salvo's Finest</title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<header>
+    <div class="container nav">
+
+        <a href="index.html" class="logo">
+            Salvo's Finest <span>CUSTOM LOBBIES</span>
+        </a>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="index.html#modes">Game Modes</a>
+            <a href="index.html#how">How It Works</a>
+            <a href="index.html#signup">Sign Up</a>
+            <a href="index.html#rules">Rules</a>
+            <a href="index.html#lobby">Lobby</a>
+        </nav>
+
+        <a href="index.html#signup" class="nav-cta">
+            Sign Up
+        </a>
+
+    </div>
+</header>
+
+
+<main>
+
+    <section>
+
+        <div class="container">
+
+            <div class="section-title">
+
+                <div>
+                    <div class="kicker">
+                        Current Lobby
+                    </div>
+
+                    <h2>
+                        Players & Teams
+                    </h2>
+                </div>
+
+                <p>
+                    Players are randomized into teams by the host.
+                </p>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div id="playerCount" class="kicker">
+                    Loading players...
+                </div>
+
+                <div id="playersList">
+
+                    <div class="player-row">
+                        <span>
+                            Loading players...
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <div class="container footer-inner">
+
+        <span>
+            APEX CUSTOM LOBBIES
+        </span>
+
+        <span>
+            Community custom games • Play fair • Have fun
+        </span>
+
+    </div>
+
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="players.js"></script>
+
+</body>
+</html>
