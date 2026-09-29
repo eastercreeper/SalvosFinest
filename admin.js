@@ -1099,31 +1099,29 @@ function populateScheduleModes() {
         return;
     }
 
-
     scheduleGameMode.innerHTML = `
         <option value="">
             Select game mode
         </option>
+
+        <option value="Undecided">
+            Undecided
+        </option>
     `;
 
+    modes.forEach(mode => {
 
-    modes.forEach(
-        mode => {
+        const option =
+            document.createElement("option");
 
-            const option =
-                document.createElement("option");
+        option.value =
+            mode.name;
 
-            option.value =
-                mode.name;
+        option.textContent =
+            mode.name;
 
-            option.textContent =
-                mode.name;
-
-            scheduleGameMode.appendChild(
-                option
-            );
-        }
-    );
+        scheduleGameMode.appendChild(option);
+    });
 }
 
 
