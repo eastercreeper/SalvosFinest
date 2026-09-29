@@ -198,6 +198,39 @@ const currentModeDetails =
 const teamResults =
     document.getElementById("teamResults");
 
+const scheduleForm =
+    document.getElementById("scheduleForm");
+
+const scheduleEventId =
+    document.getElementById("scheduleEventId");
+
+const scheduleTitle =
+    document.getElementById("scheduleTitle");
+
+const scheduleGameMode =
+    document.getElementById("scheduleGameMode");
+
+const scheduleDate =
+    document.getElementById("scheduleDate");
+
+const scheduleStartTime =
+    document.getElementById("scheduleStartTime");
+
+const scheduleEndTime =
+    document.getElementById("scheduleEndTime");
+
+const scheduleDescription =
+    document.getElementById("scheduleDescription");
+
+const saveScheduleEvent =
+    document.getElementById("saveScheduleEvent");
+
+const cancelScheduleEdit =
+    document.getElementById("cancelScheduleEdit");
+
+const adminScheduleEvents =
+    document.getElementById("adminScheduleEvents");
+
 
 /* =========================================================
    TOAST
@@ -296,7 +329,12 @@ async function checkAdminAccess() {
     showAdmin();
 
     await loadPlayers();
+
     await loadLobbyState();
+
+    populateScheduleModes();
+
+    await loadScheduleEvents();
 }
 
 /* =========================================================
@@ -1000,6 +1038,664 @@ if (clearPlayersButton) {
     );
 }
 
+
+/* =========================================================
+   SCHEDULE MANAGEMENT
+========================================================= */
+
+async function loadScheduleEvents() {
+
+    if (!adminScheduleEvents) {
+        return;
+    }
+
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from("schedule_events")
+        .select("*")
+        .order("event_date", {
+            ascending: true
+        })
+        .order("start_time", {
+            ascending: true
+        });
+
+
+    if (error) {
+
+        console.error(
+            "Schedule loading error:",
+            error
+        );
+
+        adminScheduleEvents.innerHTML = `
+            <div class="player-row">
+                <span>
+                    Unable to load scheduled events.
+                </span>
+            </div>
+        `;
+
+        return;
+    }
+
+
+    renderAdminScheduleEvents(
+        data || []
+    );
+}
+
+
+/* =========================================================
+   GAME MODE DROPDOWN
+========================================================= */
+
+function populateScheduleModes() {
+
+    if (!scheduleGameMode) {
+        return;
+    }
+
+
+    scheduleGameMode.innerHTML = `
+        <option value="">
+            Select game mode
+        </option>
+    `;
+
+
+    modes.forEach(
+        mode => {
+
+            const option =
+                document.createElement("option");
+
+            option.value =
+                mode.name;
+
+            option.textContent =
+                mode.name;
+
+            scheduleGameMode.appendChild(
+                option
+            );
+        }
+    );
+}
+
+
+/* =========================================================
+   RENDER ADMIN EVENTS
+========================================================= */
+
+function renderAdminScheduleEvents(
+    events
+) {
+
+    if (!adminScheduleEvents) {
+        return;
+    }
+
+
+    if (events.length === 0) {
+
+        adminScheduleEvents.innerHTML = `
+            <div class="player-row">
+                <span>
+                    No scheduled events.
+                </span>
+            </div>
+        `;
+
+        return;
+    }
+
+
+    adminScheduleEvents.innerHTML =
+        events
+            .map(
+                event => {
+
+                    return `
+                        <div class="admin-schedule-event">
+
+                            <div class="admin-schedule-event-info">
+
+                                <div class="admin-schedule-event-title">
+                                    ${escapeHtml(event.title)}
+                                </div>
+
+                                <div class="admin-schedule-event-meta">
+                                    ${formatScheduleDate(event.event_date)}
+                                    ${formatScheduleTimeRange(
+                        event.start_time,
+                        event.end_time
+                    )}
+                                </div>
+
+                                <div class="admin-schedule-event-mode">
+                                    ${escapeHtml(
+                        event.game_mode ||
+                        "Custom Event"
+                    )}
+                                </div>
+
+                                ${
+                        event.description
+                            ? `
+                                            <div class="admin-schedule-event-description">
+                                                ${escapeHtml(
+                                event.description
+                            )}
+                                            </div>
+                                        `
+                            : ""
+                    }
+
+                            </div>
+
+
+                            <div class="admin-schedule-event-actions">
+
+                                <button
+                                    type="button"
+                                    class="btn secondary edit-schedule-button"
+                                    data-id="${event.id}"
+                                >
+                                    Edit
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="btn danger delete-schedule-button"
+                                    data-id="${event.id}"
+                                >
+                                    Delete
+                                </button>
+
+                            </div>
+
+                        </div>
+                    `;
+                }
+            )
+            .join("");
+
+
+    document
+        .querySelectorAll(
+            ".edit-schedule-button"
+        )
+        .forEach(
+            button => {
+
+                button.addEventListener(
+                    "click",
+                    () => editScheduleEvent(
+                        Number(button.dataset.id)
+                    )
+                );
+            }
+        );
+
+
+    document
+        .querySelectorAll(
+            ".delete-schedule-button"
+        )
+        .forEach(
+            button => {
+
+                button.addEventListener(
+                    "click",
+                    () => deleteScheduleEvent(
+                        Number(button.dataset.id)
+                    )
+                );
+            }
+        );
+}
+
+
+/* =========================================================
+   ADD / EDIT EVENT
+========================================================= */
+
+if (scheduleForm) {
+
+    scheduleForm.addEventListener(
+        "submit",
+        async function (event) {
+
+            event.preventDefault();
+
+
+            const id =
+                scheduleEventId.value;
+
+
+            const eventData = {
+
+                title:
+                    scheduleTitle.value.trim(),
+
+                description:
+                    scheduleDescription.value.trim() ||
+                    null,
+
+                event_date:
+                scheduleDate.value,
+
+                start_time:
+                    scheduleStartTime.value ||
+                    null,
+
+                end_time:
+                    scheduleEndTime.value ||
+                    null,
+
+                game_mode:
+                    scheduleGameMode.value ||
+                    null,
+
+                updated_at:
+                    new Date().toISOString()
+            };
+
+
+            if (
+                !eventData.title ||
+                !eventData.event_date
+            ) {
+
+                toast(
+                    "Enter an event title and date."
+                );
+
+                return;
+            }
+
+
+            saveScheduleEvent.disabled =
+                true;
+
+            saveScheduleEvent.textContent =
+                id
+                    ? "Saving..."
+                    : "Adding...";
+
+
+            let error;
+
+
+            if (id) {
+
+                const result =
+                    await supabaseClient
+                        .from("schedule_events")
+                        .update(eventData)
+                        .eq(
+                            "id",
+                            Number(id)
+                        );
+
+                error =
+                    result.error;
+
+            } else {
+
+                const result =
+                    await supabaseClient
+                        .from("schedule_events")
+                        .insert(
+                            eventData
+                        );
+
+                error =
+                    result.error;
+            }
+
+
+            if (error) {
+
+                console.error(
+                    "Schedule save error:",
+                    error
+                );
+
+                toast(
+                    "Unable to save schedule event."
+                );
+
+                saveScheduleEvent.disabled =
+                    false;
+
+                saveScheduleEvent.textContent =
+                    id
+                        ? "Save Changes"
+                        : "Add Event";
+
+                return;
+            }
+
+
+            resetScheduleForm();
+
+            await loadScheduleEvents();
+
+            toast(
+                id
+                    ? "Event updated!"
+                    : "Event added!"
+            );
+        }
+    );
+}
+
+
+/* =========================================================
+   EDIT EVENT
+========================================================= */
+
+async function editScheduleEvent(
+    id
+) {
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from("schedule_events")
+        .select("*")
+        .eq("id", id)
+        .maybeSingle();
+
+
+    if (error || !data) {
+
+        console.error(
+            "Schedule event loading error:",
+            error
+        );
+
+        toast(
+            "Unable to load that event."
+        );
+
+        return;
+    }
+
+
+    scheduleEventId.value =
+        data.id;
+
+    scheduleTitle.value =
+        data.title || "";
+
+    scheduleGameMode.value =
+        data.game_mode || "";
+
+    scheduleDate.value =
+        data.event_date || "";
+
+    scheduleStartTime.value =
+        data.start_time
+            ? data.start_time.substring(
+                0,
+                5
+            )
+            : "";
+
+    scheduleEndTime.value =
+        data.end_time
+            ? data.end_time.substring(
+                0,
+                5
+            )
+            : "";
+
+    scheduleDescription.value =
+        data.description || "";
+
+
+    saveScheduleEvent.textContent =
+        "Save Changes";
+
+    cancelScheduleEdit.style.display =
+        "inline-flex";
+
+
+    scheduleForm.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
+
+/* =========================================================
+   DELETE EVENT
+========================================================= */
+
+async function deleteScheduleEvent(
+    id
+) {
+
+    const confirmed =
+        confirm(
+            "Delete this scheduled event?\n\n" +
+            "This cannot be undone."
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    const {
+        error
+    } = await supabaseClient
+        .from("schedule_events")
+        .delete()
+        .eq("id", id);
+
+
+    if (error) {
+
+        console.error(
+            "Schedule delete error:",
+            error
+        );
+
+        toast(
+            "Unable to delete event."
+        );
+
+        return;
+    }
+
+
+    await loadScheduleEvents();
+
+    toast(
+        "Event deleted!"
+    );
+}
+
+
+/* =========================================================
+   RESET FORM
+========================================================= */
+
+function resetScheduleForm() {
+
+    if (!scheduleForm) {
+        return;
+    }
+
+
+    scheduleForm.reset();
+
+    scheduleEventId.value =
+        "";
+
+    saveScheduleEvent.textContent =
+        "Add Event";
+
+    cancelScheduleEdit.style.display =
+        "none";
+}
+
+
+if (cancelScheduleEdit) {
+
+    cancelScheduleEdit.addEventListener(
+        "click",
+        resetScheduleForm
+    );
+}
+
+
+/* =========================================================
+   DATE / TIME FORMATTING
+========================================================= */
+
+function formatScheduleDate(
+    value
+) {
+
+    if (!value) {
+        return "";
+    }
+
+
+    const [
+        year,
+        month,
+        day
+    ] = value
+        .split("-")
+        .map(Number);
+
+
+    const date =
+        new Date(
+            year,
+            month - 1,
+            day
+        );
+
+
+    return date.toLocaleDateString(
+        "en-US",
+        {
+            month: "short",
+            day: "numeric",
+            year: "numeric"
+        }
+    );
+}
+
+
+function formatScheduleTime(
+    value
+) {
+
+    if (!value) {
+        return "";
+    }
+
+
+    const [
+        hours,
+        minutes
+    ] = value
+        .split(":")
+        .map(Number);
+
+
+    const date =
+        new Date();
+
+    date.setHours(
+        hours,
+        minutes,
+        0,
+        0
+    );
+
+
+    return date.toLocaleTimeString(
+        "en-US",
+        {
+            hour: "numeric",
+            minute: "2-digit"
+        }
+    );
+}
+
+
+function formatScheduleTimeRange(
+    start,
+    end
+) {
+
+    if (!start && !end) {
+        return "";
+    }
+
+
+    if (start && !end) {
+        return (
+            " • " +
+            formatScheduleTime(start)
+        );
+    }
+
+
+    if (!start && end) {
+        return (
+            " • Until " +
+            formatScheduleTime(end)
+        );
+    }
+
+
+    return (
+        " • " +
+        formatScheduleTime(start) +
+        " – " +
+        formatScheduleTime(end)
+    );
+}
+
+
+/* =========================================================
+   HTML ESCAPING
+========================================================= */
+
+function escapeHtml(
+    value
+) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        value ?? "";
+
+    return div.innerHTML;
+}
+
+
+/* =========================================================
+   INITIALIZE SCHEDULE ADMIN
+========================================================= */
+
+populateScheduleModes();
 
 /* =========================================================
    INITIALIZE

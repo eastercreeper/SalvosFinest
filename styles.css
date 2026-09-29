@@ -1214,3 +1214,461 @@ footer {
      margin-top: 0;
      margin-bottom: 16px;
  }
+
+ /* =========================================================
+   SCHEDULE PAGE
+========================================================= */
+
+ .schedule-page {
+     padding: 80px 0;
+     min-height: calc(100vh - 160px);
+ }
+
+ .section-heading {
+     text-align: center;
+     margin-bottom: 40px;
+ }
+
+ .section-heading h1 {
+     margin: 8px 0 10px;
+ }
+
+ .section-heading p {
+     margin: 0;
+     opacity: 0.75;
+ }
+
+
+ /* =========================================================
+    SCHEDULE CONTROLS
+ ========================================================= */
+
+ .schedule-controls {
+     display: grid;
+     grid-template-columns: 1fr auto 1fr;
+     align-items: center;
+     gap: 20px;
+     margin-bottom: 24px;
+ }
+
+ .schedule-controls h2 {
+     margin: 0;
+     text-align: center;
+ }
+
+ .schedule-controls .btn:last-child {
+     justify-self: end;
+ }
+
+
+ /* =========================================================
+    CALENDAR
+ ========================================================= */
+
+ .calendar {
+     width: 100%;
+     overflow: hidden;
+     border: 1px solid rgba(255, 255, 255, 0.08);
+     background: rgba(10, 10, 14, 0.8);
+     border-radius: 10px;
+ }
+
+ .calendar-weekdays {
+     display: grid;
+     grid-template-columns: repeat(7, 1fr);
+     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+ }
+
+ .calendar-weekdays > div {
+     padding: 14px 10px;
+     text-align: center;
+     font-size: 12px;
+     font-weight: 700;
+     letter-spacing: 1px;
+     text-transform: uppercase;
+     opacity: 0.6;
+ }
+
+ .calendar-days {
+     display: grid;
+     grid-template-columns: repeat(7, 1fr);
+ }
+
+ .calendar-day {
+     position: relative;
+     min-height: 130px;
+     padding: 10px;
+     border-right: 1px solid rgba(255, 255, 255, 0.06);
+     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+     background: rgba(255, 255, 255, 0.015);
+ }
+
+ .calendar-day:nth-child(7n) {
+     border-right: none;
+ }
+
+ .calendar-day-number {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     width: 28px;
+     height: 28px;
+     margin-bottom: 7px;
+     border-radius: 50%;
+     font-size: 13px;
+     font-weight: 700;
+ }
+
+ .calendar-day.outside-month {
+     opacity: 0.25;
+ }
+
+ .calendar-day.today .calendar-day-number {
+     background: #e72b2b;
+     color: white;
+ }
+
+
+ /* =========================================================
+    CALENDAR EVENTS
+ ========================================================= */
+
+ .calendar-event {
+     display: flex;
+     flex-direction: column;
+     width: 100%;
+     margin-bottom: 6px;
+     padding: 8px;
+     border: 1px solid rgba(231, 43, 43, 0.35);
+     border-radius: 5px;
+     background: rgba(231, 43, 43, 0.12);
+     color: inherit;
+     text-align: left;
+     cursor: pointer;
+     transition:
+             background 0.15s ease,
+             border-color 0.15s ease,
+             transform 0.15s ease;
+ }
+
+ .calendar-event:hover {
+     background: rgba(231, 43, 43, 0.22);
+     border-color: rgba(231, 43, 43, 0.7);
+     transform: translateY(-1px);
+ }
+
+ .calendar-event strong {
+     overflow: hidden;
+     font-size: 12px;
+     line-height: 1.3;
+     text-overflow: ellipsis;
+     white-space: nowrap;
+ }
+
+ .calendar-event span {
+     margin-top: 3px;
+     font-size: 10px;
+     opacity: 0.7;
+ }
+
+
+ /* =========================================================
+    EMPTY SCHEDULE
+ ========================================================= */
+
+ .schedule-empty {
+     margin-top: 20px;
+     padding: 30px;
+     border: 1px solid rgba(255, 255, 255, 0.08);
+     border-radius: 8px;
+     background: rgba(255, 255, 255, 0.02);
+     text-align: center;
+     opacity: 0.65;
+ }
+
+
+ /* =========================================================
+    SCHEDULE MODAL
+ ========================================================= */
+
+ .schedule-modal {
+     position: fixed;
+     inset: 0;
+     z-index: 1000;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     padding: 20px;
+     background: rgba(0, 0, 0, 0.75);
+ }
+
+ .schedule-modal.hidden {
+     display: none;
+ }
+
+ .schedule-modal-content {
+     position: relative;
+     width: min(520px, 100%);
+     padding: 32px;
+     border: 1px solid rgba(255, 255, 255, 0.1);
+     border-radius: 10px;
+     background: #101014;
+     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+ }
+
+ .schedule-modal-close {
+     position: absolute;
+     top: 12px;
+     right: 16px;
+     border: none;
+     background: transparent;
+     color: inherit;
+     font-size: 28px;
+     line-height: 1;
+     cursor: pointer;
+     opacity: 0.7;
+ }
+
+ .schedule-modal-close:hover {
+     opacity: 1;
+ }
+
+ .schedule-modal-content h2 {
+     margin: 10px 0;
+ }
+
+ .schedule-modal-date {
+     margin-top: 14px;
+     font-weight: 600;
+ }
+
+ .schedule-modal-time {
+     margin-top: 5px;
+     opacity: 0.7;
+ }
+
+ .schedule-modal-description {
+     margin-top: 22px;
+     line-height: 1.6;
+     opacity: 0.85;
+     white-space: pre-wrap;
+ }
+
+
+ /* =========================================================
+    ADMIN SCHEDULE
+ ========================================================= */
+
+ .schedule-admin-form {
+     margin-top: 25px;
+ }
+
+ .schedule-form-grid {
+     display: grid;
+     grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+     gap: 18px;
+ }
+
+ .form-group {
+     display: flex;
+     flex-direction: column;
+     gap: 7px;
+ }
+
+ .form-group-wide {
+     grid-column: 1 / -1;
+ }
+
+ .form-group label {
+     font-size: 12px;
+     font-weight: 700;
+     letter-spacing: 0.5px;
+     text-transform: uppercase;
+     opacity: 0.7;
+ }
+
+ .form-group input,
+ .form-group select,
+ .form-group textarea {
+     width: 100%;
+     box-sizing: border-box;
+     padding: 12px 14px;
+     border: 1px solid rgba(255, 255, 255, 0.1);
+     border-radius: 5px;
+     background: rgba(255, 255, 255, 0.04);
+     color: inherit;
+     font: inherit;
+ }
+
+ .form-group textarea {
+     resize: vertical;
+     min-height: 100px;
+ }
+
+ .form-group input:focus,
+ .form-group select:focus,
+ .form-group textarea:focus {
+     outline: none;
+     border-color: rgba(231, 43, 43, 0.7);
+ }
+
+ .schedule-form-buttons {
+     display: flex;
+     gap: 10px;
+     margin-top: 20px;
+ }
+
+
+ /* =========================================================
+    ADMIN EVENT LIST
+ ========================================================= */
+
+ .admin-schedule-events {
+     display: flex;
+     flex-direction: column;
+     gap: 12px;
+     margin-top: 20px;
+ }
+
+ .admin-schedule-event {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     gap: 20px;
+     padding: 18px;
+     border: 1px solid rgba(255, 255, 255, 0.08);
+     border-radius: 7px;
+     background: rgba(255, 255, 255, 0.025);
+ }
+
+ .admin-schedule-event-info {
+     min-width: 0;
+ }
+
+ .admin-schedule-event-title {
+     font-size: 17px;
+     font-weight: 700;
+ }
+
+ .admin-schedule-event-meta {
+     margin-top: 5px;
+     font-size: 13px;
+     opacity: 0.65;
+ }
+
+ .admin-schedule-event-mode {
+     display: inline-block;
+     margin-top: 8px;
+     padding: 4px 8px;
+     border-radius: 4px;
+     background: rgba(231, 43, 43, 0.12);
+     font-size: 11px;
+     font-weight: 700;
+     letter-spacing: 0.4px;
+ }
+
+ .admin-schedule-event-description {
+     margin-top: 8px;
+     font-size: 13px;
+     line-height: 1.5;
+     opacity: 0.7;
+     white-space: pre-wrap;
+ }
+
+ .admin-schedule-event-actions {
+     display: flex;
+     flex-shrink: 0;
+     gap: 8px;
+ }
+
+ .btn.danger {
+     border-color: rgba(231, 43, 43, 0.5);
+     background: rgba(231, 43, 43, 0.12);
+ }
+
+ .btn.danger:hover {
+     background: rgba(231, 43, 43, 0.25);
+ }
+
+
+ /* =========================================================
+    RESPONSIVE SCHEDULE
+ ========================================================= */
+
+ @media (max-width: 800px) {
+
+     .schedule-page {
+         padding: 50px 0;
+     }
+
+     .schedule-controls {
+         grid-template-columns: 1fr 1fr;
+     }
+
+     .schedule-controls h2 {
+         grid-column: 1 / -1;
+         grid-row: 1;
+     }
+
+     .schedule-controls .btn:first-child {
+         grid-column: 1;
+         grid-row: 2;
+         justify-self: start;
+     }
+
+     .schedule-controls .btn:last-child {
+         grid-column: 2;
+         grid-row: 2;
+         justify-self: end;
+     }
+
+     .calendar-weekdays > div {
+         padding: 10px 3px;
+         font-size: 9px;
+     }
+
+     .calendar-day {
+         min-height: 90px;
+         padding: 5px;
+     }
+
+     .calendar-day-number {
+         width: 24px;
+         height: 24px;
+         font-size: 11px;
+     }
+
+     .calendar-event {
+         padding: 5px;
+     }
+
+     .calendar-event strong {
+         font-size: 10px;
+     }
+
+     .calendar-event span {
+         display: none;
+     }
+
+     .schedule-form-grid {
+         grid-template-columns: 1fr;
+     }
+
+     .form-group-wide {
+         grid-column: auto;
+     }
+
+     .admin-schedule-event {
+         align-items: flex-start;
+         flex-direction: column;
+     }
+
+     .admin-schedule-event-actions {
+         width: 100%;
+     }
+
+     .admin-schedule-event-actions .btn {
+         flex: 1;
+     }
+ }

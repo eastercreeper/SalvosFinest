@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Schedule | Salvo's Finest CUSTOM LOBBIES</title>
+
+    <link
+            rel="stylesheet"
+            href="styles.css"
+    >
+</head>
+
+<body>
+
+<header>
+    <div class="container nav">
+
+        <a
+                href="index.html"
+                class="logo"
+        >
+            SALVO'S FINEST
+            <span>CUSTOM LOBBIES</span>
+        </a>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="index.html#modes">Game Modes</a>
+            <a href="players.html">Players & Teams</a>
+            <a
+                    href="schedule.html"
+                    class="active"
+            >
+                Schedule
+            </a>
+            <a href="index.html#signup" class="nav-cta">
+                Sign Up
+            </a>
+        </nav>
+
+    </div>
+</header>
+
+
+<main>
+
+    <section class="schedule-page">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <span class="section-label">
+                    CUSTOM LOBBIES
+                </span>
+
+                <h1>Schedule</h1>
+
+                <p>
+                    View upcoming custom lobbies and events.
+                </p>
+
+            </div>
+
+
+            <div class="schedule-controls">
+
+                <button
+                        id="previousMonth"
+                        class="btn secondary"
+                        type="button"
+                >
+                    ← Previous
+                </button>
+
+                <h2 id="currentMonth">
+                    Loading...
+                </h2>
+
+                <button
+                        id="nextMonth"
+                        class="btn secondary"
+                        type="button"
+                >
+                    Next →
+                </button>
+
+            </div>
+
+
+            <div class="calendar">
+
+                <div class="calendar-weekdays">
+
+                    <div>Sun</div>
+                    <div>Mon</div>
+                    <div>Tue</div>
+                    <div>Wed</div>
+                    <div>Thu</div>
+                    <div>Fri</div>
+                    <div>Sat</div>
+
+                </div>
+
+
+                <div
+                        id="calendarDays"
+                        class="calendar-days"
+                ></div>
+
+            </div>
+
+
+            <div
+                    id="eventModal"
+                    class="schedule-modal hidden"
+            >
+
+                <div class="schedule-modal-content">
+
+                    <button
+                            id="closeEventModal"
+                            class="schedule-modal-close"
+                            type="button"
+                            aria-label="Close"
+                    >
+                        ×
+                    </button>
+
+                    <span
+                            id="modalGameMode"
+                            class="section-label"
+                    >
+                        EVENT
+                    </span>
+
+                    <h2 id="modalTitle">
+                        Event
+                    </h2>
+
+                    <div
+                            id="modalDate"
+                            class="schedule-modal-date"
+                    ></div>
+
+                    <div
+                            id="modalTime"
+                            class="schedule-modal-time"
+                    ></div>
+
+                    <p
+                            id="modalDescription"
+                            class="schedule-modal-description"
+                    ></p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                    id="scheduleEmpty"
+                    class="schedule-empty"
+                    style="display: none;"
+            >
+                No scheduled events for this month.
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <div class="container">
+
+        <p>
+            Salvo's Finest CUSTOM LOBBIES
+        </p>
+
+    </div>
+
+</footer>
+
+
+<script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+></script>
+
+<script src="schedule.js"></script>
+
+</body>
+</html>

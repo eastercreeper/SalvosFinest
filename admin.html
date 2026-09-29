@@ -190,6 +190,201 @@
 
             </div>
 
+            <!-- =========================================================
+     SCHEDULE MANAGEMENT
+========================================================= -->
+
+            <section
+                    id="scheduleAdminSection"
+                    class="admin-section"
+            >
+
+                <div class="panel">
+
+                    <div class="admin-section-heading">
+
+                        <div>
+                <span class="section-label">
+                    ADMIN
+                </span>
+
+                            <h2>Schedule Management</h2>
+
+                            <p>
+                                Create and manage upcoming custom lobby events.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <form
+                            id="scheduleForm"
+                            class="schedule-admin-form"
+                    >
+
+                        <input
+                                type="hidden"
+                                id="scheduleEventId"
+                        >
+
+
+                        <div class="schedule-form-grid">
+
+                            <div class="form-group">
+
+                                <label for="scheduleTitle">
+                                    Event Title
+                                </label>
+
+                                <input
+                                        type="text"
+                                        id="scheduleTitle"
+                                        placeholder="Custom Lobby"
+                                        required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="scheduleGameMode">
+                                    Game Mode
+                                </label>
+
+                                <select
+                                        id="scheduleGameMode"
+                                        required
+                                >
+                                    <option value="">
+                                        Select game mode
+                                    </option>
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="scheduleDate">
+                                    Date
+                                </label>
+
+                                <input
+                                        type="date"
+                                        id="scheduleDate"
+                                        required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="scheduleStartTime">
+                                    Start Time
+                                </label>
+
+                                <input
+                                        type="time"
+                                        id="scheduleStartTime"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="scheduleEndTime">
+                                    End Time
+                                </label>
+
+                                <input
+                                        type="time"
+                                        id="scheduleEndTime"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group form-group-wide">
+
+                                <label for="scheduleDescription">
+                                    Description
+                                </label>
+
+                                <textarea
+                                        id="scheduleDescription"
+                                        rows="4"
+                                        placeholder="Describe the lobby or event..."
+                                ></textarea>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="schedule-form-buttons">
+
+                            <button
+                                    type="submit"
+                                    id="saveScheduleEvent"
+                                    class="btn"
+                            >
+                                Add Event
+                            </button>
+
+                            <button
+                                    type="button"
+                                    id="cancelScheduleEdit"
+                                    class="btn secondary"
+                                    style="display: none;"
+                            >
+                                Cancel Edit
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <div class="admin-section-heading">
+
+                        <div>
+
+                            <h2>Scheduled Events</h2>
+
+                            <p>
+                                Edit or remove existing events.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                            id="adminScheduleEvents"
+                            class="admin-schedule-events"
+                    >
+
+                        <div class="player-row">
+                <span>
+                    Loading scheduled events...
+                </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
 
             <!-- TEAM RESULTS -->
 
