@@ -123,6 +123,49 @@ header {
     font-style: italic;
 }
 
+.nav-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    background: #0d1620;
+    border: 1px solid #263342;
+    border-radius: 6px;
+    cursor: pointer;
+    box-sizing: border-box;
+    clip-path: none;
+}
+
+.nav-toggle:hover {
+    border-color: var(--red);
+    background: #142232;
+}
+
+.nav-toggle span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background-color: var(--white);
+    border-radius: 2px;
+    transition: transform 0.22s ease, opacity 0.22s ease;
+}
+
+.nav-toggle.open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.nav-toggle.open span:nth-child(2) {
+    opacity: 0;
+}
+
+.nav-toggle.open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
 nav {
     display: flex;
     align-items: center;
@@ -1006,128 +1049,317 @@ footer {
 
 
 /* =========================================================
-   17. TABLET
+   17. TABLET RESPONSIVENESS
 ========================================================= */
 
 @media (max-width: 900px) {
 
-    /* Navigation */
-
-    nav {
-        display: none;
+    .nav {
+        position: relative;
+        height: 68px;
     }
 
+    .nav-toggle {
+        display: flex;
+    }
+
+    /* Mobile navigation dropdown */
+    nav {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 2px;
+        background: rgba(8, 14, 22, 0.98);
+        backdrop-filter: blur(16px);
+        border: 1px solid #1b2530;
+        border-top: none;
+        border-bottom: 2px solid var(--red);
+        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7);
+        padding: 12px 14px 18px;
+        border-radius: 0 0 10px 10px;
+        z-index: 60;
+    }
+
+    nav.is-open {
+        display: flex;
+    }
+
+    nav a,
+    nav button.nav-cta {
+        display: block;
+        width: 100%;
+        padding: 13px 16px;
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        color: #cbd5e1;
+        border-radius: 6px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        box-sizing: border-box;
+        text-align: left;
+    }
+
+    nav a:hover,
+    nav a.active {
+        background: rgba(255, 38, 53, 0.12);
+        color: #fff;
+    }
+
+    nav .nav-cta,
+    nav button.nav-cta {
+        margin-top: 10px;
+        text-align: center;
+        clip-path: none;
+        border-radius: 6px;
+        padding: 13px 18px;
+        font-size: 13px;
+        border-bottom: none;
+    }
 
     /* Game modes */
-
     .grid {
         grid-template-columns: repeat(2, 1fr);
     }
 
-
     /* How it works */
-
     .steps {
         grid-template-columns: repeat(2, 1fr);
     }
 
-
     /* Community rules */
-
     .rules {
         grid-template-columns: 1fr;
     }
 
-
     /* Lobby */
-
     .lobby {
         grid-template-columns: 1fr;
     }
 
-
     /* Hero */
-
     .hero-art {
         width: 100%;
-        opacity: 0.35;
+        opacity: 0.25;
     }
 
     .hero-content {
         width: 100%;
+        padding: 70px 0;
     }
 }
 
 
 /* =========================================================
-   18. MOBILE
+   18. MOBILE PHONES (<= 600px)
 ========================================================= */
 
 @media (max-width: 600px) {
 
-    /* Grids */
+    .container {
+        width: 92%;
+    }
 
+    /* Grids */
     .grid,
     .form-grid,
-    .stats,
     .steps {
         grid-template-columns: 1fr;
     }
 
+    /* Stats: 2x2 grid */
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
 
-    /* Stats */
+    .stats .stat:nth-child(odd) {
+        border-right: 1px solid var(--line);
+    }
 
-    .stats .stat {
+    .stats .stat:nth-child(even) {
         border-right: 0;
+    }
+
+    .stats .stat:nth-child(1),
+    .stats .stat:nth-child(2) {
         border-bottom: 1px solid var(--line);
     }
 
+    .stats .stat {
+        padding: 16px 12px;
+    }
+
+    .stats .stat b {
+        font-size: 22px;
+    }
+
+    .stats .stat span {
+        font-size: 11px;
+    }
 
     /* Hero */
-
     .hero {
-        min-height: 600px;
+        min-height: 520px;
     }
 
+    .hero-content {
+        padding: 50px 0;
+    }
+
+    h1 {
+        font-size: clamp(34px, 10vw, 48px);
+        letter-spacing: -2px;
+        line-height: 0.95;
+    }
+
+    h1 em {
+        margin-top: 12px;
+        font-size: 0.45em;
+        letter-spacing: 0;
+    }
+
+    .hero p {
+        font-size: 14px;
+        line-height: 1.6;
+    }
 
     /* Hero buttons */
-
     .actions {
         flex-direction: column;
+        gap: 12px;
     }
 
+    .actions .btn {
+        width: 100%;
+        text-align: center;
+        clip-path: none;
+        border-radius: 6px;
+        padding: 14px 20px;
+        box-sizing: border-box;
+    }
 
     /* Section headings */
-
     .section-title {
         display: block;
+        margin-bottom: 24px;
     }
 
+    .section-title h2 {
+        font-size: 26px;
+    }
+
+    .section-title p {
+        font-size: 13px;
+        margin-top: 8px;
+    }
+
+    /* Form */
+    .form-panel {
+        padding: 20px 16px;
+    }
+
+    .field input {
+        font-size: 16px; /* Prevents auto-zoom on iOS */
+        padding: 12px 14px;
+    }
+
+    .submit-row .btn {
+        width: 100%;
+        clip-path: none;
+        border-radius: 6px;
+        padding: 14px;
+        text-align: center;
+    }
+
+    /* Rules */
+    .rule {
+        padding: 16px;
+        gap: 14px;
+    }
+
+    .rule-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 13px;
+    }
 
     /* Fallback modes */
-
     .fallback-list {
         flex-wrap: wrap;
-
-        gap: 15px;
+        gap: 10px;
     }
 
+    .fallback-list span {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
 
     /* Footer */
-
     .footer-inner {
-        display: block;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
     }
 
-
     /* Rules modal */
-
     .rules-modal-box {
-        padding: 28px 22px;
+        padding: 24px 18px;
+        width: 100%;
+        max-height: 88vh;
     }
 
     .rules-modal-box h2 {
-        font-size: 30px;
+        font-size: 24px;
+    }
+
+    .rules-modal-close {
+        top: 14px;
+        right: 14px;
+        width: 32px;
+        height: 32px;
+        font-size: 18px;
+    }
+
+    /* Toast */
+    .toast {
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+        text-align: center;
+    }
+}
+
+/* =========================================================
+   19. EXTRA SMALL PHONES (<= 400px)
+========================================================= */
+
+@media (max-width: 400px) {
+
+    .logo {
+        font-size: 17px;
+    }
+
+    .logo span {
+        font-size: 12px;
+        margin-left: 4px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .stats .stat {
+        border-right: 0 !important;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .stats .stat:last-child {
+        border-bottom: 0;
     }
 }
 
@@ -1722,6 +1954,13 @@ footer {
     RESPONSIVE SCHEDULE
  ========================================================= */
 
+ .schedule-controls #previousMonth,
+ .schedule-controls #nextMonth {
+     width: 160px;
+     min-width: 160px;
+     box-sizing: border-box;
+ }
+
  @media (max-width: 800px) {
 
      .schedule-page {
@@ -1730,23 +1969,32 @@ footer {
 
      .schedule-controls {
          grid-template-columns: 1fr 1fr;
+         gap: 14px;
      }
 
      .schedule-controls h2 {
          grid-column: 1 / -1;
          grid-row: 1;
+         text-align: center;
+         font-size: 20px;
      }
 
      .schedule-controls .btn:first-child {
          grid-column: 1;
          grid-row: 2;
-         justify-self: start;
+         justify-self: stretch;
      }
 
      .schedule-controls .btn:last-child {
          grid-column: 2;
          grid-row: 2;
-         justify-self: end;
+         justify-self: stretch;
+     }
+
+     .schedule-controls #previousMonth,
+     .schedule-controls #nextMonth {
+         width: 100%;
+         min-width: 0;
      }
 
      .calendar-weekdays > div {
@@ -1755,18 +2003,18 @@ footer {
      }
 
      .calendar-day {
-         min-height: 90px;
+         min-height: 80px;
          padding: 5px;
      }
 
      .calendar-day-number {
-         width: 24px;
-         height: 24px;
+         width: 22px;
+         height: 22px;
          font-size: 11px;
      }
 
      .calendar-event {
-         padding: 5px;
+         padding: 4px 6px;
      }
 
      .calendar-event strong {
@@ -1799,11 +2047,33 @@ footer {
      }
  }
 
- .schedule-controls #previousMonth,
- .schedule-controls #nextMonth {
-     width: 160px;
-     min-width: 160px;
-     box-sizing: border-box;
+ @media (max-width: 500px) {
+
+     .calendar-weekdays > div {
+         padding: 6px 1px;
+         font-size: 8px;
+     }
+
+     .calendar-day {
+         min-height: 65px;
+         padding: 3px;
+     }
+
+     .calendar-day-number {
+         width: 18px;
+         height: 18px;
+         font-size: 9px;
+         margin-bottom: 2px;
+     }
+
+     .calendar-event {
+         padding: 2px 4px;
+         font-size: 9px;
+     }
+
+     .calendar-event strong {
+         font-size: 9px;
+     }
  }
 
 

@@ -357,10 +357,47 @@ function toast(message) {
 
 
 /* =========================================================
+   MOBILE NAVIGATION
+========================================================= */
+
+function initMobileNav() {
+ const navToggle = document.getElementById("navToggle");
+ const mainNav = document.getElementById("mainNav");
+
+ if (!navToggle || !mainNav) {
+  return;
+ }
+
+ navToggle.addEventListener("click", () => {
+  const isOpen = mainNav.classList.toggle("is-open");
+  navToggle.classList.toggle("open", isOpen);
+  navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+ });
+
+ mainNav.querySelectorAll("a, button").forEach(item => {
+  item.addEventListener("click", () => {
+   mainNav.classList.remove("is-open");
+   navToggle.classList.remove("open");
+   navToggle.setAttribute("aria-expanded", "false");
+  });
+ });
+
+ document.addEventListener("click", event => {
+  if (!mainNav.contains(event.target) && !navToggle.contains(event.target)) {
+   mainNav.classList.remove("is-open");
+   navToggle.classList.remove("open");
+   navToggle.setAttribute("aria-expanded", "false");
+  }
+ });
+}
+
+
+/* =========================================================
    INITIALIZE
 ========================================================= */
 
 renderModes();
+initMobileNav();
 
 document.querySelectorAll('a[href^="#"]').forEach(link => {
  link.addEventListener("click", function (event) {
