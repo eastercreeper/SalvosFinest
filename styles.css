@@ -616,12 +616,6 @@ section {
    12. SIGN-UP FORM
 ========================================================= */
 
-.form-wrap {
-    max-width: 950px;
-
-    margin: auto;
-}
-
 .form-panel {
     padding: 28px;
 
@@ -1200,8 +1194,69 @@ footer {
      }
  }
  /* =========================================
-   PUBLIC TEAMS PAGE
+   PUBLIC TEAMS / PLAYERS PAGE
    ========================================= */
+
+ .players-page {
+     padding: 60px 0;
+     min-height: calc(100vh - 160px);
+ }
+
+ .game-mode-banner {
+     margin-bottom: 35px;
+     padding: 24px 28px;
+     border: 1px solid var(--red);
+     border-radius: 8px;
+     background: linear-gradient(
+         135deg,
+         #321118,
+         #0b1118
+     );
+     box-shadow: 0 4px 20px rgba(255, 38, 53, 0.12);
+ }
+
+ .game-mode-banner .banner-kicker {
+     display: inline-block;
+     color: #ff7a82;
+     font-size: 11px;
+     font-weight: 900;
+     letter-spacing: 1.5px;
+     text-transform: uppercase;
+     margin-bottom: 8px;
+ }
+
+ .game-mode-banner h2 {
+     margin: 0 0 10px 0;
+     font-size: 28px;
+     font-weight: 900;
+     color: var(--white);
+     text-transform: uppercase;
+ }
+
+ .game-mode-banner p {
+     margin: 0;
+     color: #cbd2d9;
+     font-size: 14px;
+     line-height: 1.6;
+ }
+
+ @media (max-width: 600px) {
+     .players-page {
+         padding: 40px 0;
+     }
+
+     .game-mode-banner {
+         padding: 18px 20px;
+     }
+
+     .game-mode-banner h2 {
+         font-size: 22px;
+     }
+
+     .game-mode-banner p {
+         font-size: 13px;
+     }
+ }
 
  .teams-container {
      display: grid;
@@ -1373,6 +1428,73 @@ footer {
      margin-top: 3px;
      font-size: 10px;
      opacity: 0.7;
+ }
+
+
+ /* =========================================================
+    CALENDAR OVERFLOW FIXES
+ ========================================================= */
+
+ .calendar-days,
+ .calendar-weekdays {
+     grid-template-columns: repeat(
+         7,
+         minmax(0, 1fr)
+     );
+ }
+
+ .calendar-day {
+     min-width: 0;
+     overflow: hidden;
+ }
+
+ .calendar-event {
+     display: block;
+     align-self: flex-start;
+
+     width: fit-content;
+     max-width: 100%;
+     min-width: 0;
+
+     overflow: hidden;
+     white-space: nowrap;
+ }
+
+ .calendar-event strong,
+ .calendar-event span {
+     display: block;
+     min-width: 0;
+
+     overflow: hidden;
+     text-overflow: ellipsis;
+     white-space: nowrap;
+ }
+
+ .calendar-event strong {
+     margin: 0;
+ }
+
+ .calendar-event span {
+     margin-top: 3px;
+ }
+
+ @media (max-width: 700px) {
+     .calendar-day {
+         min-height: 105px;
+         padding: 6px;
+     }
+
+     .calendar-event {
+         padding: 6px;
+     }
+
+     .calendar-event strong {
+         font-size: 11px;
+     }
+
+     .calendar-event span {
+         font-size: 9px;
+     }
  }
 
 
@@ -1682,4 +1804,65 @@ footer {
      width: 160px;
      min-width: 160px;
      box-sizing: border-box;
+ }
+
+
+ /* =========================================================
+    ADMIN PLAYER LIST
+ ========================================================= */
+
+ .admin-players-panel {
+     margin-top: 20px;
+ }
+
+ .admin-player-row {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     gap: 16px;
+
+     min-width: 0;
+     padding: 13px 0;
+
+     border-bottom: 1px solid #1c2834;
+ }
+
+ .admin-player-info {
+     display: flex;
+     flex-direction: column;
+     gap: 5px;
+
+     min-width: 0;
+ }
+
+ .admin-player-info strong,
+ .admin-player-info span {
+     overflow: hidden;
+     text-overflow: ellipsis;
+     white-space: nowrap;
+ }
+
+ .admin-player-info span {
+     color: var(--muted);
+     font-size: 12px;
+ }
+
+ .btn.danger {
+     flex-shrink: 0;
+     background: #9d1f2a;
+ }
+
+ .btn.danger:hover {
+     background: #c52b37;
+ }
+
+ @media (max-width: 600px) {
+     .admin-player-row {
+         align-items: stretch;
+         flex-direction: column;
+     }
+
+     .admin-player-row .btn {
+         align-self: flex-start;
+     }
  }

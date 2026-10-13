@@ -12,7 +12,7 @@ const supabaseClient = supabase.createClient(
 
 
 /* =========================================================
-   LOAD PLAYERS / TEAMS
+   LOAD PLAYERS / TEAMS & GAME MODE
 ========================================================= */
 
 async function loadPlayers() {
@@ -46,17 +46,21 @@ async function loadPlayers() {
             playersError
         );
 
-        playerCount.textContent =
-            "Unable to load players.";
+        if (playerCount) {
+            playerCount.textContent =
+                "Unable to load players.";
+        }
 
-        playersList.innerHTML = `
-            <div class="player-row">
-                <span>
-                    Something went wrong while loading
-                    the registered players.
-                </span>
-            </div>
-        `;
+        if (playersList) {
+            playersList.innerHTML = `
+                <div class="player-row">
+                    <span>
+                        Something went wrong while loading
+                        the registered players.
+                    </span>
+                </div>
+            `;
+        }
 
         return;
     }
@@ -66,7 +70,7 @@ async function loadPlayers() {
 
 
     /* =====================================================
-       LOAD CURRENT LOBBY STATE
+       LOAD CURRENT LOBBY STATE (MODE & TEAMS)
     ===================================================== */
 
     const {
@@ -74,7 +78,7 @@ async function loadPlayers() {
         error: lobbyError
     } = await supabaseClient
         .from("lobby_state")
-        .select("teams")
+        .select("*")
         .eq("id", 1)
         .maybeSingle();
 
@@ -86,16 +90,42 @@ async function loadPlayers() {
             lobbyError
         );
 
-        playerCount.textContent =
-            `${registeredPlayers.length} PLAYER${registeredPlayers.length === 1 ? "" : "S"} REGISTERED`;
-
-        renderPlayerList(
-            registeredPlayers,
-            playersList
+        renderGameModeBanner(
+            "Unable to Load",
+            "API is down or unable to load game mode."
         );
+
+        if (playerCount) {
+            playerCount.textContent =
+                `${registeredPlayers.length} PLAYER${registeredPlayers.length === 1 ? "" : "S"} REGISTERED`;
+        }
+
+        if (playersList) {
+            renderPlayerList(
+                registeredPlayers,
+                playersList
+            );
+        }
 
         return;
     }
+
+
+    /* =====================================================
+       RENDER GAME MODE BANNER
+    ===================================================== */
+
+    const gameMode =
+        lobby?.game_mode || "Not Selected";
+
+    const gameModeDetails =
+        lobby?.game_mode_details ||
+        "The host has not selected a game mode yet.";
+
+    renderGameModeBanner(
+        gameMode,
+        gameModeDetails
+    );
 
 
     /* =====================================================
@@ -125,13 +155,58 @@ async function loadPlayers() {
        SHOW REGISTERED PLAYERS
     ===================================================== */
 
-    playerCount.textContent =
-        `${registeredPlayers.length} PLAYER${registeredPlayers.length === 1 ? "" : "S"} REGISTERED`;
+    if (playerCount) {
+        playerCount.textContent =
+            `${registeredPlayers.length} PLAYER${registeredPlayers.length === 1 ? "" : "S"} REGISTERED`;
+    }
 
-    renderPlayerList(
-        registeredPlayers,
-        playersList
-    );
+    if (playersList) {
+        renderPlayerList(
+            registeredPlayers,
+            playersList
+        );
+    }
+}
+
+
+/* =========================================================
+   RENDER GAME MODE BANNER
+========================================================= */
+
+function renderGameModeBanner(mode, details) {
+
+    const bannerModeName =
+        document.getElementById("bannerModeName");
+
+    const bannerModeDetails =
+        document.getElementById("bannerModeDetails");
+
+    if (bannerModeName) {
+        bannerModeName.textContent =
+            mode ? mode.toUpperCase() : "NOT SELECTED";
+    }
+
+    if (bannerModeDetails) {
+        bannerModeDetails.textContent =
+            details || "The host has not selected a game mode yet.";
+    }
+}
+
+
+/* =========================================================
+   ESCAPE HTML UTILITY
+========================================================= */
+
+function escapeHtml(text) {
+
+    if (!text) return "";
+
+    return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
 
@@ -143,6 +218,10 @@ function renderPlayerList(
     players,
     playersList
 ) {
+
+    if (!playersList) {
+        return;
+    }
 
     if (players.length === 0) {
 
@@ -165,7 +244,7 @@ function renderPlayerList(
                 <div class="player-row">
 
                     <span>
-                        ${index + 1}. ${player.apex_name}
+                        ${index + 1}. ${escapeHtml(player.apex_name)}
                     </span>
 
                     <span class="badge">
@@ -189,8 +268,14 @@ function renderTeams(
     playersList
 ) {
 
-    playerCount.textContent =
-        "RANDOMIZED TEAMS";
+    if (playerCount) {
+        playerCount.textContent =
+            "RANDOMIZED TEAMS";
+    }
+
+    if (!playersList) {
+        return;
+    }
 
 
     playersList.innerHTML = `
@@ -211,7 +296,7 @@ function renderTeams(
                                 <div class="player-row">
 
                                     <span>
-                                        ${player.apex_name}
+                                        ${escapeHtml(player.apex_name)}
                                     </span>
 
                                     <span class="badge">

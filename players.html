@@ -4,9 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Lobby Players | Salvo's Finest</title>
+    <title>Players | Salvo's Finest CUSTOM LOBBIES</title>
 
     <link rel="stylesheet" href="styles.css">
+    <script>
+        if (window.location.pathname.endsWith('.html')) {
+            let cleanPath = window.location.pathname.replace(/\.html$/, '');
+            if (cleanPath.endsWith('/index')) {
+                cleanPath = cleanPath.slice(0, -5);
+            }
+            if (!cleanPath) cleanPath = '/';
+            window.history.replaceState(null, '', cleanPath + window.location.search + window.location.hash);
+        }
+    </script>
 </head>
 
 <body>
@@ -23,8 +33,8 @@
             <a href="./#modes">Game Modes</a>
             <a href="./#how">How It Works</a>
             <a href="./#rules">Rules</a>
-            <a href="./#lobby">Lobby</a>
-            <a href="schedule.html">Schedule</a>
+            <a href="players" class="active">Players</a>
+            <a href="schedule">Schedule</a>
             <a href="./#signup" class="nav-cta">Sign Up</a>
         </nav>
 
@@ -34,15 +44,29 @@
 
 <main>
 
-    <section>
+    <section class="players-page">
 
         <div class="container">
+
+            <div id="gameModeBanner" class="game-mode-banner">
+                <span class="banner-kicker">
+                    Current Game Mode
+                </span>
+
+                <h2 id="bannerModeName">
+                    Loading...
+                </h2>
+
+                <p id="bannerModeDetails">
+                    Checking active game mode...
+                </p>
+            </div>
 
             <div class="section-title">
 
                 <div>
                     <div class="kicker">
-                        Current Lobby
+                        Registered Players
                     </div>
 
                     <h2>

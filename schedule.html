@@ -14,6 +14,16 @@
             rel="stylesheet"
             href="styles.css"
     >
+    <script>
+        if (window.location.pathname.endsWith('.html')) {
+            let cleanPath = window.location.pathname.replace(/\.html$/, '');
+            if (cleanPath.endsWith('/index')) {
+                cleanPath = cleanPath.slice(0, -5);
+            }
+            if (!cleanPath) cleanPath = '/';
+            window.history.replaceState(null, '', cleanPath + window.location.search + window.location.hash);
+        }
+    </script>
 </head>
 
 <body>
@@ -30,14 +40,13 @@
         </a>
 
         <nav>
-            <<a href="./">Home</a>
+            <a href="./">Home</a>
             <a href="./#modes">Game Modes</a>
             <a href="./#how">How It Works</a>
             <a href="./#rules">Rules</a>
-            <a href="./#lobby">Lobby</a>
+            <a href="players">Players</a>
             <a href="schedule" class="active">Schedule</a>
             <a href="./#signup" class="nav-cta">Sign Up</a>
-
         </nav>
 
     </div>

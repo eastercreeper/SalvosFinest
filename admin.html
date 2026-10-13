@@ -7,6 +7,16 @@
     <title>Admin Dashboard | Salvo's Finest</title>
 
     <link rel="stylesheet" href="styles.css">
+    <script>
+        if (window.location.pathname.endsWith('.html')) {
+            let cleanPath = window.location.pathname.replace(/\.html$/, '');
+            if (cleanPath.endsWith('/index')) {
+                cleanPath = cleanPath.slice(0, -5);
+            }
+            if (!cleanPath) cleanPath = '/';
+            window.history.replaceState(null, '', cleanPath + window.location.search + window.location.hash);
+        }
+    </script>
 </head>
 
 <body>
@@ -183,6 +193,32 @@
                         Clear Registered Players
                     </button>
 
+                </div>
+
+            </div>
+
+            <!-- REGISTERED PLAYERS -->
+
+            <div class="panel admin-players-panel">
+
+                <div class="admin-section-heading">
+                    <div>
+                        <span class="section-label">
+                            ADMIN
+                        </span>
+
+                        <h2>Registered Players</h2>
+
+                        <p>
+                            Review or remove individual players from the lobby.
+                        </p>
+                    </div>
+                </div>
+
+                <div id="adminPlayersList">
+                    <div class="player-row">
+                        <span>Loading players...</span>
+                    </div>
                 </div>
 
             </div>

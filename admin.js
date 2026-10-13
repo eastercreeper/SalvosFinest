@@ -231,6 +231,9 @@ const cancelScheduleEdit =
 const adminScheduleEvents =
     document.getElementById("adminScheduleEvents");
 
+const adminPlayersList =
+    document.getElementById("adminPlayersList");
+
 
 /* =========================================================
    TOAST
@@ -529,6 +532,164 @@ async function loadPlayers() {
 
 
     registeredPlayers = data || [];
+
+    renderAdminPlayers();
+}
+
+
+/* =========================================================
+   RENDER REGISTERED PLAYERS
+========================================================= */
+
+function renderAdminPlayers() {
+
+    if (!adminPlayersList) {
+        return;
+    }
+
+    if (registeredPlayers.length === 0) {
+        adminPlayersList.innerHTML = `
+            <div class="player-row">
+                <span>
+                    No players have registered yet.
+                </span>
+            </div>
+        `;
+
+        return;
+    }
+
+    adminPlayersList.innerHTML =
+        registeredPlayers
+            .map((player, index) => {
+
+                const apexName =
+                    escapeHtml(
+                        player.apex_name ||
+                        "Unknown player"
+                    );
+
+                const discordName =
+                    player.discord_name
+                        ? escapeHtml(
+                            player.discord_name
+                        )
+                        : "Discord username unavailable";
+
+                return `
+                    <div class="admin-player-row">
+
+                        <div class="admin-player-info">
+                            <strong>
+                                ${index + 1}. ${apexName}
+                            </strong>
+
+                            <span>
+                                Discord:
+                                ${discordName}
+                            </span>
+                        </div>
+
+                        <button
+                            type="button"
+                            class="btn danger remove-player-button"
+                            data-player-id="${player.id}"
+                            data-player-name="${apexName}"
+                        >
+                            Remove
+                        </button>
+
+                    </div>
+                `;
+            })
+            .join("");
+
+    adminPlayersList
+        .querySelectorAll(".remove-player-button")
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                () => removePlayer(
+                    button.dataset.playerId,
+                    button.dataset.playerName
+                )
+            );
+        });
+}
+
+
+/* =========================================================
+   REMOVE INDIVIDUAL PLAYER
+========================================================= */
+
+async function removePlayer(
+    playerId,
+    playerName
+) {
+    if (!playerId) {
+        toast("Unable to identify that player.");
+        return;
+    }
+
+    const confirmed =
+        confirm(
+            `Remove ${playerName || "this player"} from the lobby?\n\n` +
+            "This cannot be undone."
+        );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const button =
+        adminPlayersList.querySelector(
+            `[data-player-id="${CSS.escape(String(playerId))}"]`
+        );
+
+    if (button) {
+        button.disabled = true;
+        button.textContent = "Removing...";
+    }
+
+    const {
+        error
+    } = await supabaseClient.rpc(
+        "remove_player",
+        {
+            target_player_id: Number(playerId)
+        }
+    );
+
+    if (error) {
+        console.error(
+            "Player removal error:",
+            error
+        );
+
+        if (button) {
+            button.disabled = false;
+            button.textContent = "Remove";
+        }
+
+        toast(
+            error.message ||
+            "Unable to remove player."
+        );
+
+        return;
+    }
+
+    registeredPlayers =
+        registeredPlayers.filter(
+            player =>
+                String(player.id) !==
+                String(playerId)
+        );
+
+    renderAdminPlayers();
+
+    toast("Player removed from the lobby.");
 }
 
 
@@ -1028,6 +1189,8 @@ if (clearPlayersButton) {
 
             // Clear local player list
             registeredPlayers = [];
+
+            renderAdminPlayers();
 
             clearPlayersButton.disabled = false;
             clearPlayersButton.textContent =
