@@ -183,6 +183,18 @@ const spinTeamsButton =
 const spinModeButton =
     document.getElementById("spinModeButton");
 
+const syncDiscordButton =
+    document.getElementById("syncDiscordButton");
+
+const discordBotUrlInput =
+    document.getElementById("discordBotUrlInput");
+
+const saveBotUrlButton =
+    document.getElementById("saveBotUrlButton");
+
+const discordSyncStatus =
+    document.getElementById("discordSyncStatus");
+
 const clearLobbyButton =
     document.getElementById("clearLobbyButton");
 
@@ -338,6 +350,8 @@ async function checkAdminAccess() {
     populateScheduleModes();
 
     await loadScheduleEvents();
+
+    await testDiscordBotConnection();
 }
 
 /* =========================================================
@@ -848,6 +862,196 @@ async function updateLobbyState(updates) {
 }
 
 /* =========================================================
+   DISCORD BOT INTEGRATION
+========================================================= */
+
+function getDiscordBotUrl() {
+    return localStorage.getItem("salvos_discord_bot_url") || "http://localhost:3001";
+}
+
+function setDiscordBotUrl(url) {
+    if (!url) {
+        localStorage.removeItem("salvos_discord_bot_url");
+    } else {
+        localStorage.setItem("salvos_discord_bot_url", url.trim().replace(/\/+$/, ""));
+    }
+}
+
+function updateDiscordStatus(html, isError = false) {
+    if (!discordSyncStatus) return;
+    discordSyncStatus.innerHTML = html;
+    discordSyncStatus.style.borderColor = isError ? "var(--red)" : "var(--line)";
+}
+
+async function testDiscordBotConnection() {
+    const botUrl = getDiscordBotUrl();
+    if (discordBotUrlInput) {
+        discordBotUrlInput.value = botUrl;
+    }
+
+    try {
+        updateDiscordStatus(`Testing connection to Discord bot at <code>${escapeHtml(botUrl)}</code>...`);
+        const response = await fetch(`${botUrl}/api/health`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP status ${response.status}`);
+        }
+
+        const data = await response.json();
+        if (data.discord?.connected && data.discord?.guildFound) {
+            updateDiscordStatus(
+                `<strong style="color: #4ade80;">● Discord Bot Online</strong> — Connected as <strong>${escapeHtml(data.discord.botUser)}</strong> ` +
+                `in server <strong>${escapeHtml(data.discord.guildName)}</strong> (${data.discord.memberCount} members).`
+            );
+            return true;
+        } else if (data.discord?.connected && !data.discord?.guildFound) {
+            updateDiscordStatus(
+                `<strong style="color: var(--orange);">▲ Discord Bot Online (Server Not Found)</strong> — Bot is running as <strong>${escapeHtml(data.discord.botUser)}</strong> ` +
+                `but target Discord Server ID was not found. Please verify <code>DISCORD_GUILD_ID</code> in the bot configuration.`,
+                true
+            );
+            return false;
+        } else {
+            updateDiscordStatus(
+                `<strong style="color: var(--orange);">▲ Discord Bot Offline / Connecting</strong> — Bot server is reachable, but Discord client is not ready yet.`,
+                true
+            );
+            return false;
+        }
+    } catch (err) {
+        console.warn("Discord Bot connection check failed:", err.message);
+        updateDiscordStatus(
+            `<strong style="color: var(--muted);">○ Discord Bot Server Offline</strong> (${escapeHtml(botUrl)}) — ` +
+            `Teams will still save in database. Start the bot server to enable automated role synchronization.`
+        );
+        return false;
+    }
+}
+
+async function syncDiscordTeams(teamsToSync, options = { silentIfOffline: false }) {
+    const botUrl = getDiscordBotUrl();
+
+    // Check if user has active Supabase session
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    const token = session?.access_token || "";
+
+    if (syncDiscordButton) {
+        syncDiscordButton.disabled = true;
+        syncDiscordButton.textContent = "Syncing Discord...";
+    }
+
+    updateDiscordStatus(`<em>Synchronizing team roles with Discord server...</em>`);
+
+    try {
+        const response = await fetch(`${botUrl}/api/sync-teams`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                ...(token ? { "Authorization": `Bearer ${token}` } : {})
+            },
+            body: JSON.stringify({
+                teams: teamsToSync
+            })
+        });
+
+        if (!response.ok) {
+            const errData = await response.json().catch(() => ({}));
+            throw new Error(errData.error || errData.message || `HTTP ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (syncDiscordButton) {
+            syncDiscordButton.disabled = false;
+            syncDiscordButton.textContent = "↻ Sync Discord Roles";
+        }
+
+        if (result.success && result.unmatchedCount === 0) {
+            const createdMsg = result.rolesCreated && result.rolesCreated.length > 0 ? ` (Created: ${result.rolesCreated.join(", ")})` : "";
+            updateDiscordStatus(
+                `<strong style="color: #4ade80;">✓ Discord Synchronized:</strong> Assigned roles for ${result.matchedCount} player(s) across ${result.totalTeams} team(s)${escapeHtml(createdMsg)}.`
+            );
+            toast("Discord roles synchronized!");
+        } else if (result.unmatchedCount > 0) {
+            const unmatchedNames = result.unmatchedPlayers
+                .map(p => `${escapeHtml(p.apex_name)} (${escapeHtml(p.discord_name || "no username")}: ${escapeHtml(p.reason)})`)
+                .join("<br>• ");
+
+            updateDiscordStatus(
+                `<strong style="color: var(--orange);">▲ Discord Partial Sync:</strong> ${result.matchedCount} player(s) assigned, but <strong>${result.unmatchedCount} unmatched:</strong><br>• ${unmatchedNames}`,
+                true
+            );
+            toast(`Discord sync: ${result.matchedCount} assigned, ${result.unmatchedCount} unmatched.`);
+        }
+
+        return result;
+    } catch (err) {
+        console.warn("Discord team sync failed:", err.message);
+
+        if (syncDiscordButton) {
+            syncDiscordButton.disabled = false;
+            syncDiscordButton.textContent = "↻ Sync Discord Roles";
+        }
+
+        const statusMsg = `<strong style="color: var(--red);">✕ Discord Sync Failed:</strong> ${escapeHtml(err.message)}. Generated teams remain saved in the database.`;
+        updateDiscordStatus(statusMsg, true);
+
+        if (!options.silentIfOffline) {
+            toast("Discord sync failed: " + err.message);
+        }
+
+        return { success: false, error: err.message };
+    }
+}
+
+async function clearDiscordRoles() {
+    const botUrl = getDiscordBotUrl();
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    const token = session?.access_token || "";
+
+    try {
+        const response = await fetch(`${botUrl}/api/clear-roles`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                ...(token ? { "Authorization": `Bearer ${token}` } : {})
+            }
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            console.log("[Discord] Cleared roles for", result.clearedCount, "members.");
+            updateDiscordStatus(`<span>Discord lobby roles cleared (${result.clearedCount || 0} members updated).</span>`);
+        }
+    } catch (err) {
+        console.warn("Discord role clearing skipped/failed:", err.message);
+    }
+}
+
+if (saveBotUrlButton) {
+    saveBotUrlButton.addEventListener("click", async () => {
+        if (discordBotUrlInput) {
+            setDiscordBotUrl(discordBotUrlInput.value);
+            toast("Bot URL saved!");
+            await testDiscordBotConnection();
+        }
+    });
+}
+
+if (syncDiscordButton) {
+    syncDiscordButton.addEventListener("click", async () => {
+        if (!currentLobby?.teams || currentLobby.teams.length === 0) {
+            toast("No teams generated yet. Spin teams first.");
+            return;
+        }
+        await syncDiscordTeams(currentLobby.teams, { silentIfOffline: false });
+    });
+}
+
+/* =========================================================
    SHUFFLE PLAYERS
 ========================================================= */
 
@@ -975,6 +1179,9 @@ if (spinTeamsButton) {
                 toast(
                     "Teams randomized!"
                 );
+
+                // Asynchronously synchronize team roles in Discord (does not block or affect saved teams)
+                syncDiscordTeams(newTeams, { silentIfOffline: true });
             }
 
         }
@@ -1118,6 +1325,7 @@ if (clearLobbyButton) {
 
             if (success) {
                 toast("Lobby cleared!");
+                clearDiscordRoles();
             }
 
         }
@@ -1197,6 +1405,7 @@ if (clearPlayersButton) {
                 "Clear Registered Players";
 
             toast("Lobby cleared!");
+            clearDiscordRoles();
         }
     );
 }

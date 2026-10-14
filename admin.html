@@ -186,6 +186,13 @@
                         ↻ Spin Game Mode
                     </button>
 
+                    <button
+                            class="btn secondary"
+                            id="syncDiscordButton"
+                    >
+                        ↻ Sync Discord Roles
+                    </button>
+
                     <button id="clearLobbyButton" class="btn">
 
                         Clear Lobby
@@ -199,6 +206,42 @@
                         Clear Registered Players
                     </button>
 
+                </div>
+
+            </div>
+
+            <!-- DISCORD INTEGRATION STATUS -->
+
+            <div class="panel discord-integration-panel" id="discordPanel">
+
+                <div class="admin-section-heading">
+                    <div>
+                        <span class="section-label">
+                            DISCORD BOT
+                        </span>
+
+                        <h2>Role Synchronization</h2>
+
+                        <p>
+                            Automatically assign Team roles in Discord when teams are generated.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="discord-config-row" style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
+                    <input
+                            type="text"
+                            id="discordBotUrlInput"
+                            placeholder="Bot API URL (e.g., http://localhost:3001 or deployed URL)"
+                            style="flex: 1; min-width: 250px; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid var(--line); color: var(--white); border-radius: 4px;"
+                    >
+                    <button id="saveBotUrlButton" class="btn secondary" type="button" style="padding: 10px 16px;">
+                        Save & Test Connection
+                    </button>
+                </div>
+
+                <div id="discordSyncStatus" style="font-size: 13px; color: var(--muted); line-height: 1.6; padding: 12px; background: rgba(0,0,0,0.25); border: 1px solid var(--line); border-radius: 4px;">
+                    <span>Discord Bot Status: Ready. Connect bot server to enable automated role syncing.</span>
                 </div>
 
             </div>
