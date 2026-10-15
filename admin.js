@@ -186,6 +186,12 @@ const spinModeButton =
 const syncDiscordButton =
     document.getElementById("syncDiscordButton");
 
+const clearTeamAssignmentsButton =
+    document.getElementById("clearTeamAssignmentsButton");
+
+const deleteTeamRolesButton =
+    document.getElementById("deleteTeamRolesButton");
+
 const discordBotUrlInput =
     document.getElementById("discordBotUrlInput");
 
@@ -1010,25 +1016,111 @@ async function syncDiscordTeams(teamsToSync, options = { silentIfOffline: false 
 async function clearDiscordRoles() {
     const botUrl = getDiscordBotUrl();
     const { data: { session } } = await supabaseClient.auth.getSession();
-    const token = session?.access_token || "";
 
-    try {
-        const response = await fetch(`${botUrl}/api/clear-roles`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                ...(token ? { "Authorization": `Bearer ${token}` } : {})
-            }
-        });
-
-        if (response.ok) {
-            const result = await response.json();
-            console.log("[Discord] Cleared roles for", result.clearedCount, "members.");
-            updateDiscordStatus(`<span>Discord lobby roles cleared (${result.clearedCount || 0} members updated).</span>`);
-        }
-    } catch (err) {
-        console.warn("Discord role clearing skipped/failed:", err.message);
+    if (!session?.access_token) {
+        throw new Error("Please sign in as an administrator again.");
     }
+
+    const response = await fetch(`${botUrl}/api/clear-roles`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.access_token}`
+        }
+    });
+
+    const result = await response.json().catch(() => ({}));
+
+    if (!response.ok || !result.success) {
+        throw new Error(result.error || "Unable to clear team assignments.");
+    }
+
+    updateDiscordStatus(
+        `<span>Team assignments cleared. ${result.clearedCount || 0} member(s) updated; roles retained.</span>`
+    );
+
+    return result;
+}
+if (clearTeamAssignmentsButton) {
+    clearTeamAssignmentsButton.addEventListener("click", async () => {
+        const confirmed = confirm(
+            "Clear Team Assignments?\n\n" +
+            "This removes the bot-managed team roles from members.\n" +
+            "The Discord role objects will remain."
+        );
+
+        if (!confirmed) return;
+
+        clearTeamAssignmentsButton.disabled = true;
+        clearTeamAssignmentsButton.textContent = "Clearing...";
+
+        try {
+            const result = await clearDiscordRoles();
+            toast(`Assignments cleared for ${result.clearedCount || 0} member(s).`);
+        } catch (error) {
+            toast(`Failed to clear assignments: ${error.message}`);
+        } finally {
+            clearTeamAssignmentsButton.disabled = false;
+            clearTeamAssignmentsButton.textContent = "Clear Team Assignments";
+        }
+    });
+}
+
+if (deleteTeamRolesButton) {
+    deleteTeamRolesButton.addEventListener("click", async () => {
+        const confirmed = confirm(
+            "PERMANENTLY DELETE TEAM ROLES?\n\n" +
+            "This removes tracked team roles from members and deletes " +
+            "the role objects from Discord.\n\n" +
+            "This cannot be undone. Continue?"
+        );
+
+        if (!confirmed) return;
+
+        deleteTeamRolesButton.disabled = true;
+        deleteTeamRolesButton.textContent = "Deleting...";
+
+        try {
+            const { data: { session } } =
+                await supabaseClient.auth.getSession();
+
+            if (!session?.access_token) {
+                throw new Error("Please sign in as an administrator again.");
+            }
+
+            const response = await fetch(
+                `${getDiscordBotUrl()}/api/delete-team-roles`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${session.access_token}`
+                    }
+                }
+            );
+
+            const result = await response.json().catch(() => ({}));
+
+            if (!response.ok || !result.success) {
+                throw new Error(
+                    result.error ||
+                    (result.errors || []).join("; ") ||
+                    "Unable to delete team roles."
+                );
+            }
+
+            updateDiscordStatus(
+                `<span>Deleted ${result.deletedCount || 0} tracked team role(s).</span>`
+            );
+
+            toast(`Deleted ${result.deletedCount || 0} team role(s).`);
+        } catch (error) {
+            toast(`Failed to delete team roles: ${error.message}`);
+        } finally {
+            deleteTeamRolesButton.disabled = false;
+            deleteTeamRolesButton.textContent = "Delete Team Roles";
+        }
+    });
 }
 
 if (saveBotUrlButton) {
@@ -1323,10 +1415,9 @@ if (clearLobbyButton) {
             clearLobbyButton.textContent = "Clear Lobby";
 
 
-            if (success) {
-                toast("Lobby cleared!");
-                clearDiscordRoles();
-            }
+if (success) {
+    toast("Lobby cleared!");
+}
 
         }
     );
