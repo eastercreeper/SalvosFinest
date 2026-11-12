@@ -190,7 +190,7 @@
                             class="btn"
                             id="syncDiscordButton"
                     >
-                        ↻ Sync Discord Roles
+                        ↻ Sync Discord Teams & Channels
                     </button>
 
                     <button id="clearLobbyButton" class="btn">
@@ -220,10 +220,10 @@
                             DISCORD BOT
                         </span>
 
-                        <h2>Role Synchronization</h2>
+                        <h2>Discord Team & Voice Channel Management</h2>
 
                         <p>
-                            Automatically assign Team roles in Discord when teams are generated.
+                            Automatically assign team roles, create private voice channels, and grant team roles read access to the shared team channel.
                         </p>
                     </div>
                 </div>
@@ -244,7 +244,14 @@
                     <span>Discord Bot Status: Ready. Connect bot server to enable automated role syncing.</span>
                 </div>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px;">
-</div>
+                    <button
+                            id="deleteTeamRolesButton"
+                            class="btn danger"
+                            type="button"
+                    >
+                        Delete Team Roles & Voice Channels
+                    </button>
+                </div>
 
             </div>
 
