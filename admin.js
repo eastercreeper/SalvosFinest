@@ -949,7 +949,7 @@ async function syncDiscordTeams(teamsToSync, options = { silentIfOffline: false 
         syncDiscordButton.textContent = "Syncing Discord...";
     }
 
-    updateDiscordStatus(`<em>Synchronizing team roles with Discord server...</em>`);
+    updateDiscordStatus(`<em>Synchronizing team roles, private voice channels, and shared-channel access...</em>`);
 
     try {
         const response = await fetch(`${botUrl}/api/sync-teams`, {
@@ -976,21 +976,34 @@ async function syncDiscordTeams(teamsToSync, options = { silentIfOffline: false 
         }
 
         if (result.success && result.unmatchedCount === 0) {
-            const createdMsg = result.rolesCreated && result.rolesCreated.length > 0 ? ` (Created: ${result.rolesCreated.join(", ")})` : "";
+            const roleSummary = result.rolesCreated?.length
+                ? ` Created: ${result.rolesCreated.join(", ")}.`
+                : "";
+            const channelSummary = ` ${result.voiceChannelsCreated?.length || 0} voice channel(s) created, ${result.voiceChannelsReused?.length || 0} reused.`;
+            const sharedSummary = result.sharedChannelConfigured
+                ? " Team roles can view and read the shared channel."
+                : " Shared-channel permissions could not be verified.";
             updateDiscordStatus(
-                `<strong style="color: #4ade80;">✓ Discord Synchronized:</strong> Assigned roles for ${result.matchedCount} player(s) across ${result.totalTeams} team(s)${escapeHtml(createdMsg)}.`
+                `<strong style="color: #4ade80;">✓ Discord Synchronized:</strong> Assigned roles for ${result.matchedCount} player(s) across ${result.totalTeams} team(s).${escapeHtml(roleSummary + channelSummary + sharedSummary)}`
             );
-            toast("Discord roles synchronized!");
+            toast("Discord teams and voice channels synchronized!");
         } else if (result.unmatchedCount > 0) {
             const unmatchedNames = result.unmatchedPlayers
                 .map(p => `${escapeHtml(p.apex_name)} (${escapeHtml(p.discord_name || "no username")}: ${escapeHtml(p.reason)})`)
                 .join("<br>• ");
 
             updateDiscordStatus(
-                `<strong style="color: var(--orange);">▲ Discord Partial Sync:</strong> ${result.matchedCount} player(s) assigned, but <strong>${result.unmatchedCount} unmatched:</strong><br>• ${unmatchedNames}`,
+                `<strong style="color: var(--orange);">▲ Discord Partial Sync:</strong> ${result.matchedCount} player(s) assigned, but <strong>${result.unmatchedCount} unmatched:</strong><br>• ${unmatchedNames}<br>${result.voiceChannelsCreated?.length || 0} private voice channel(s) created; ${result.voiceChannelsReused?.length || 0} reused.`,
                 true
             );
             toast(`Discord sync: ${result.matchedCount} assigned, ${result.unmatchedCount} unmatched.`);
+        } else {
+            const errors = (result.errors || []).map(escapeHtml).join("<br>• ");
+            updateDiscordStatus(
+                `<strong style="color: var(--red);">✕ Discord Sync Incomplete:</strong> Team setup needs attention.${errors ? `<br>• ${errors}` : ""}`,
+                true
+            );
+            toast("Discord sync completed with errors.");
         }
 
         return result;
@@ -1070,8 +1083,8 @@ if (deleteTeamRolesButton) {
     deleteTeamRolesButton.addEventListener("click", async () => {
         const confirmed = confirm(
             "PERMANENTLY DELETE TEAM ROLES?\n\n" +
-            "This removes tracked team roles from members and deletes " +
-            "the role objects from Discord.\n\n" +
+            "This removes tracked team roles from members, deletes the role objects, " +
+            "and deletes the private voice channels managed for those teams.\n\n" +
             "This cannot be undone. Continue?"
         );
 
@@ -1110,10 +1123,10 @@ if (deleteTeamRolesButton) {
             }
 
             updateDiscordStatus(
-                `<span>Deleted ${result.deletedCount || 0} tracked team role(s).</span>`
+                `<span>Deleted ${result.deletedCount || 0} tracked team role(s) and ${result.deletedVoiceChannelCount || 0} private voice channel(s).</span>`
             );
 
-            toast(`Deleted ${result.deletedCount || 0} team role(s).`);
+            toast(`Deleted ${result.deletedCount || 0} team role(s) and ${result.deletedVoiceChannelCount || 0} voice channel(s).`);
         } catch (error) {
             toast(`Failed to delete team roles: ${error.message}`);
         } finally {
