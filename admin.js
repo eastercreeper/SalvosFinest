@@ -201,6 +201,15 @@ const saveBotUrlButton =
 const discordSyncStatus =
     document.getElementById("discordSyncStatus");
 
+const checkInToggle =
+    document.getElementById("checkInToggle");
+
+const checkInToggleLabel =
+    document.getElementById("checkInToggleLabel");
+
+const checkInStatus =
+    document.getElementById("checkInStatus");
+
 const clearLobbyButton =
     document.getElementById("clearLobbyButton");
 
@@ -358,6 +367,8 @@ async function checkAdminAccess() {
     await loadScheduleEvents();
 
     await testDiscordBotConnection();
+
+    await loadCheckInStatus();
 }
 
 /* =========================================================
@@ -596,6 +607,10 @@ function renderAdminPlayers() {
                         )
                         : "Discord username unavailable";
 
+                const attendanceStatus = player.present === true
+                    ? '<span style="color: #4ade80; font-weight: 600;">✓ Present</span>'
+                    : '<span style="color: var(--muted);">Not checked in</span>';
+
                 return `
                     <div class="admin-player-row">
 
@@ -607,6 +622,10 @@ function renderAdminPlayers() {
                             <span>
                                 Discord:
                                 ${discordName}
+                            </span>
+
+                            <span>
+                                Attendance: ${attendanceStatus}
                             </span>
                         </div>
 
@@ -866,6 +885,103 @@ async function updateLobbyState(updates) {
 
     return true;
 }
+
+/* =========================================================
+   APEX PLAYER CHECK-IN
+========================================================= */
+
+async function loadCheckInStatus() {
+    if (!checkInToggle || !checkInStatus) return;
+
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session?.access_token) return;
+
+    try {
+        const response = await fetch(`${getDiscordBotUrl()}/api/check-in/status`, {
+            headers: { "Authorization": `Bearer ${session.access_token}` }
+        });
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.error || "Unable to load check-in status.");
+        }
+
+        checkInToggle.checked = result.enabled;
+        renderCheckInToggle(result.enabled);
+    } catch (error) {
+        checkInStatus.textContent = `Unable to load check-in status: ${error.message}`;
+        checkInStatus.style.color = "var(--red)";
+    }
+}
+
+function renderCheckInToggle(enabled) {
+    if (checkInToggle) checkInToggle.checked = enabled;
+    if (checkInToggleLabel) {
+        checkInToggleLabel.textContent = enabled ? "Check-in enabled" : "Check-in disabled";
+    }
+    if (checkInStatus) {
+        checkInStatus.textContent = enabled
+            ? "Players can now use /check-in in Discord. New check-ins are being recorded."
+            : "Check-in is closed. The /check-in command will not record attendance.";
+        checkInStatus.style.color = enabled ? "#4ade80" : "var(--muted)";
+    }
+}
+
+async function setCheckInEnabled(enabled) {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session?.access_token) {
+        throw new Error("Please sign in as an administrator again.");
+    }
+
+    const response = await fetch(`${getDiscordBotUrl()}/api/check-in/toggle`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.access_token}`
+        },
+        body: JSON.stringify({ enabled })
+    });
+
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok || !result.success) {
+        throw new Error(result.error || "Unable to update check-in.");
+    }
+
+    renderCheckInToggle(result.enabled);
+    await loadPlayers();
+}
+
+if (checkInToggle) {
+    checkInToggle.addEventListener("change", async () => {
+        const enabled = checkInToggle.checked;
+
+        if (enabled && !confirm(
+            "Open Apex player check-in?\n\nThis starts a fresh attendance list and clears any previous Present statuses."
+        )) {
+            checkInToggle.checked = false;
+            return;
+        }
+
+        checkInToggle.disabled = true;
+        if (checkInStatus) checkInStatus.textContent = "Updating check-in...";
+
+        try {
+            await setCheckInEnabled(enabled);
+            toast(enabled ? "Apex check-in enabled!" : "Apex check-in disabled.");
+        } catch (error) {
+            console.error("Check-in toggle error:", error);
+            checkInToggle.checked = !enabled;
+            if (checkInStatus) {
+                checkInStatus.textContent = error.message;
+                checkInStatus.style.color = "var(--red)";
+            }
+            toast(error.message);
+        } finally {
+            checkInToggle.disabled = false;
+        }
+    });
+}
+
 
 /* =========================================================
    DISCORD BOT INTEGRATION
