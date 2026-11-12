@@ -265,6 +265,8 @@ if (signupForm) {
 
       // Verify that this exact Discord username belongs to a server member
       // before allowing registration.
+      let verifiedDiscordUsername = "";
+
       try {
        const verificationResponse = await fetch(
            "https://bot.notkairii.me/api/discord/verify-member",
@@ -291,6 +293,8 @@ if (signupForm) {
         submitButton.textContent = "Submit Registration";
         return;
        }
+
+       verifiedDiscordUsername = verification.username;
       } catch (verificationError) {
        console.error("Discord verification error:", verificationError);
        toast("Unable to verify your Discord username right now. Please try again later.");
@@ -306,7 +310,7 @@ if (signupForm) {
           .from("players")
           .insert([
            {
-            discord_name: verification.username,
+            discord_name: verifiedDiscordUsername,
             apex_name: apex,
             game_mode: "Any"
            }
