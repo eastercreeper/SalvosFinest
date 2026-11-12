@@ -263,8 +263,8 @@ if (signupForm) {
           "Submitting...";
 
 
-      // Verify that this exact Discord user ID is a member of the
-      // Salvo's Finest server before allowing registration.
+      // Verify that this exact Discord username belongs to a server member
+      // before allowing registration.
       try {
        const verificationResponse = await fetch(
            "https://bot.notkairii.me/api/discord/verify-member",
@@ -274,7 +274,7 @@ if (signupForm) {
              "Content-Type": "application/json"
             },
             body: JSON.stringify({
-             discord_id: discord
+             discord_username: discord
             })
            }
        );
@@ -284,7 +284,7 @@ if (signupForm) {
        if (!verificationResponse.ok || !verification.valid) {
         toast(
             verification.error ||
-            "Invalid Discord ID or you are not in the Salvo's Finest Discord server."
+            "That Discord username was not found in the Salvo's Finest server. Check your username and try again."
         );
 
         submitButton.disabled = false;
@@ -293,7 +293,7 @@ if (signupForm) {
        }
       } catch (verificationError) {
        console.error("Discord verification error:", verificationError);
-       toast("Unable to verify your Discord ID right now. Please try again later.");
+       toast("Unable to verify your Discord username right now. Please try again later.");
 
        submitButton.disabled = false;
        submitButton.textContent = "Submit Registration";
@@ -306,7 +306,7 @@ if (signupForm) {
           .from("players")
           .insert([
            {
-            discord_name: discord,
+            discord_name: verification.username,
             apex_name: apex,
             game_mode: "Any"
            }
