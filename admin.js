@@ -972,7 +972,7 @@ async function syncDiscordTeams(teamsToSync, options = { silentIfOffline: false 
 
         if (syncDiscordButton) {
             syncDiscordButton.disabled = false;
-            syncDiscordButton.textContent = "↻ Sync Discord Roles";
+            syncDiscordButton.textContent = "↻ Sync Discord Teams & Channels";
         }
 
         if (result.success && result.unmatchedCount === 0) {
@@ -1012,7 +1012,7 @@ async function syncDiscordTeams(teamsToSync, options = { silentIfOffline: false 
 
         if (syncDiscordButton) {
             syncDiscordButton.disabled = false;
-            syncDiscordButton.textContent = "↻ Sync Discord Roles";
+            syncDiscordButton.textContent = "↻ Sync Discord Teams & Channels";
         }
 
         const statusMsg = `<strong style="color: var(--red);">✕ Discord Sync Failed:</strong> ${escapeHtml(err.message)}. Generated teams remain saved in the database.`;
@@ -1131,7 +1131,7 @@ if (deleteTeamRolesButton) {
             toast(`Failed to delete team roles: ${error.message}`);
         } finally {
             deleteTeamRolesButton.disabled = false;
-            deleteTeamRolesButton.textContent = "Delete Team Roles";
+            deleteTeamRolesButton.textContent = "Delete Team Roles & Voice Channels";
         }
     });
 }
