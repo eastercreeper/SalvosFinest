@@ -263,6 +263,43 @@ if (signupForm) {
           "Submitting...";
 
 
+      // Verify that this exact Discord user ID is a member of the
+      // Salvo's Finest server before allowing registration.
+      try {
+       const verificationResponse = await fetch(
+           "https://bot.notkairii.me/api/discord/verify-member",
+           {
+            method: "POST",
+            headers: {
+             "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+             discord_id: discord
+            })
+           }
+       );
+
+       const verification = await verificationResponse.json().catch(() => ({}));
+
+       if (!verificationResponse.ok || !verification.valid) {
+        toast(
+            verification.error ||
+            "Invalid Discord ID or you are not in the Salvo's Finest Discord server."
+        );
+
+        submitButton.disabled = false;
+        submitButton.textContent = "Submit Registration";
+        return;
+       }
+      } catch (verificationError) {
+       console.error("Discord verification error:", verificationError);
+       toast("Unable to verify your Discord ID right now. Please try again later.");
+
+       submitButton.disabled = false;
+       submitButton.textContent = "Submit Registration";
+       return;
+      }
+
       const {
        error
       } = await supabaseClient
